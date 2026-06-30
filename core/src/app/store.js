@@ -1,25 +1,25 @@
-import { configureStore } from "@reduxjs/toolkit";
+// import { configureStore } from "@reduxjs/toolkit";
 
-import rootReducer from "./rootReducer";
+// import rootReducer from "./rootReducer";
 
-import rootSaga from "./rootSaga";
+// import rootSaga from "./rootSaga";
 
-import sagaMiddleware from "./sagaMiddleware";
+// import sagaMiddleware from "./sagaMiddleware";
 
-const store = configureStore({
+// const store = configureStore({
 
-  reducer: rootReducer,
+//   reducer: rootReducer,
 
-  middleware: (getDefaultMiddleware) =>
+//   middleware: (getDefaultMiddleware) =>
 
-    getDefaultMiddleware({
+//     getDefaultMiddleware({
 
-      serializableCheck: false,
+//       serializableCheck: false,
 
-    }).concat(sagaMiddleware),
+//     }).concat(sagaMiddleware),
 
-});
+// });
 
-sagaMiddleware.run(rootSaga);
+// sagaMiddleware.run(rootSaga);
 
-export default store;
+// export default store;

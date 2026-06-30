@@ -1,14 +1,12 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import styled from "styled-components";
 import { Grid, Container, Icon } from "semantic-ui-react";
-import { Card, CardContent, Typography, Box, Alert, Button, TextField, InputAdornment, IconButton } from "@mui/material";
+import { Card, CardContent, Typography, Box, Alert, Button, TextField, MenuItem, InputAdornment, IconButton } from "@mui/material";
 import { Form } from "antd";
+import authAPI from "../../modules/auth/authAPI";
 import useAuth from "../../modules/auth/hooks/useAuth";
 import { ROUTES, ROLES } from "../../utils/constants";
-import { useSelector } from "react-redux";
-
-// ── Styled ────────────────────────────────────────────────────
 
 const PageWrapper = styled.div`
   min-height: 100vh;
@@ -16,6 +14,7 @@ const PageWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 40px 0;
 `;
 
 const StyledCard = styled(Card)`
@@ -23,7 +22,7 @@ const StyledCard = styled(Card)`
   border: 1px solid ${({ theme }) => theme.colors.border} !important;
   border-radius: 16px !important;
   width: 100%;
-  max-width: 420px;
+  max-width: 460px;
 `;
 
 const FormWrapper = styled.div`
@@ -37,52 +36,67 @@ const FormWrapper = styled.div`
   }
 `;
 
-// ── Component ─────────────────────────────────────────────────
-
-const LoginPage = () => {
-  const { login, loading, error, isAuthenticated, role } = useAuth();
-  const navigate    = useNavigate();
-  const tenantConfig = useSelector((state) => state.tenant?.tenant);
-  const [form]      = Form.useForm();
+const RegisterPage = () => {
+  const { login, isAuthenticated, role } = useAuth();
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+  const [error,   setError]   = useState('');
+  const [form]                = Form.useForm();
   const [showPassword, setShowPassword] = useState(false);
 
-  // Redirect after login based on role
   useEffect(() => {
     if (isAuthenticated) {
       if (role === ROLES.RECEPTIONIST) {
-        navigate(ROUTES.CALENDAR, { replace: true });
+        navigate(ROUTES.CALENDAR,   { replace: true });
       } else {
-        navigate(ROUTES.DASHBOARD, { replace: true });
+        navigate(ROUTES.DASHBOARD,  { replace: true });
       }
     }
   }, [isAuthenticated, role, navigate]);
 
-  const handleSubmit = (values) => {
-    // No tenant_id — subdomain determines which DB to connect to
-    login({
-      email:    values.email,
-      password: values.password,
-    });
+  const handleSubmit = async (values) => {
+    setError('');
+    setLoading(true);
+
+    try {
+      // Register — no tenant_id needed
+      await authAPI.register({
+        role_id:    values.role_id,
+        first_name: values.first_name,
+        last_name:  values.last_name,
+        email:      values.email,
+        password:   values.password,
+      });
+
+      // Auto login after register
+      login({
+        email:    values.email,
+        password: values.password,
+      });
+
+    } catch (err) {
+      setError(
+        err.response?.data?.payload?.message || 'Registration failed'
+      );
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <PageWrapper>
       <Container>
         <Grid centered>
-          <Grid.Column mobile={16} tablet={10} computer={6}>
+          <Grid.Column mobile={16} tablet={10} computer={7}>
             <Box sx={{ textAlign: 'center', mb: 3 }}>
               <Typography
                 variant="h5"
-                sx={{
-                  color:      '#e8eaf6',
-                  fontWeight: 700,
-                  mb:         0.5,
-                }}
+                sx={{ color: '#e8eaf6', fontWeight: 700, mb: 0.5 }}
               >
-                {tenantConfig?.company_name || 'Healthcare SaaS'}
+                Create Account
               </Typography>
               <Typography sx={{ color: '#9094a6', fontSize: '14px' }}>
-                Sign in to your workspace
+                Register as a new staff member
               </Typography>
             </Box>
 
@@ -99,8 +113,64 @@ const LoginPage = () => {
                     form={form}
                     layout="vertical"
                     onFinish={handleSubmit}
-                    autoComplete="off"
                   >
+                    <Form.Item
+                      name="role_id"
+                      initialValue=""
+                      rules={[{ required: true, message: 'Please select a role' }]}
+                    >
+                      <TextField
+                        select
+                        fullWidth
+                        variant="outlined"
+                        label="Role"
+                        defaultValue=""
+                        slotProps={{
+                          select: {
+                            MenuProps: {
+                              disablePortal: true,
+                            }
+                          }
+                        }}
+                      >
+                        <MenuItem value={2}>Provider (Doctor)</MenuItem>
+                        <MenuItem value={3}>Nurse</MenuItem>
+                        <MenuItem value={4}>Patient</MenuItem>
+                        <MenuItem value={5}>Pharmacist</MenuItem>
+                        <MenuItem value={6}>Receptionist</MenuItem>
+                      </TextField>
+                    </Form.Item>
+
+                    <Box sx={{ display: 'flex', gap: 2 }}>
+                      <Form.Item
+                        name="first_name"
+                        initialValue=""
+                        style={{ flex: 1 }}
+                        rules={[{ required: true, message: 'Required' }]}
+                      >
+                        <TextField
+                          fullWidth
+                          variant="outlined"
+                          label="First Name"
+                          placeholder="John"
+                        />
+                      </Form.Item>
+
+                      <Form.Item
+                        name="last_name"
+                        initialValue=""
+                        style={{ flex: 1 }}
+                        rules={[{ required: true, message: 'Required' }]}
+                      >
+                        <TextField
+                          fullWidth
+                          variant="outlined"
+                          label="Last Name"
+                          placeholder="Smith"
+                        />
+                      </Form.Item>
+                    </Box>
+
                     <Form.Item
                       name="email"
                       initialValue=""
@@ -113,20 +183,23 @@ const LoginPage = () => {
                         fullWidth
                         variant="outlined"
                         label="Email"
-                        placeholder="admin@hospital.com"
+                        placeholder="john@hospital.com"
                       />
                     </Form.Item>
 
                     <Form.Item
                       name="password"
                       initialValue=""
-                      rules={[{ required: true, message: 'Password is required' }]}
+                      rules={[
+                        { required: true, message: 'Password is required' },
+                        { min: 8, message: 'At least 8 characters' },
+                      ]}
                     >
                       <TextField
                         fullWidth
                         variant="outlined"
                         label="Password"
-                        placeholder="Your password"
+                        placeholder="Min. 8 characters"
                         type={showPassword ? 'text' : 'password'}
                         slotProps={{
                           input: {
@@ -165,11 +238,20 @@ const LoginPage = () => {
                           },
                         }}
                       >
-                        {loading ? 'Signing in...' : 'Sign In'}
+                        {loading ? 'Creating Account...' : 'Register'}
                       </Button>
                     </Form.Item>
                   </Form>
                 </FormWrapper>
+
+                <Box sx={{ textAlign: 'center', mt: 1 }}>
+                  <Typography sx={{ color: '#9094a6', fontSize: '14px' }}>
+                    Already have an account?{' '}
+                    <Link to={ROUTES.LOGIN} style={{ color: '#4f8ef7' }}>
+                      Sign In
+                    </Link>
+                  </Typography>
+                </Box>
               </CardContent>
             </StyledCard>
           </Grid.Column>
@@ -179,4 +261,4 @@ const LoginPage = () => {
   );
 };
 
-export default LoginPage;
+export default RegisterPage;
