@@ -32,6 +32,20 @@ axiosClient.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
+let isRefreshing = false;
+let failedQueue = [];
+
+const processQueue = (error, token = null) => {
+  failedQueue.forEach((prom) => {
+    if (error) {
+      prom.reject(error);
+    } else {
+      prom.resolve(token);
+    }
+  });
+  failedQueue = [];
+};
+
 axiosClient.interceptors.response.use(
   (response) => {
     // Automatically capture CSRF token from any response if present
@@ -41,11 +55,55 @@ axiosClient.interceptors.response.use(
     }
     return response;
   },
-  (error) => {
-    if (error.response?.status === 401) {
-      tokenService.clearAuth();
-      window.location.href = "/login";
+  async (error) => {
+    const originalRequest = error.config;
+
+    // Check if the error is 401 and we haven't already retried this request
+    if (error.response?.status === 401 && !originalRequest._retry) {
+      // Avoid refreshing again if the request is for the refresh endpoint itself
+      if (originalRequest.url?.includes("/auth/refresh")) {
+        tokenService.clearAuth();
+        window.location.href = "/login";
+        return Promise.reject(error);
+      }
+
+      if (isRefreshing) {
+        return new Promise((resolve, reject) => {
+          failedQueue.push({ resolve, reject });
+        })
+          .then((token) => {
+            originalRequest.headers.Authorization = `Bearer ${token}`;
+            return axiosClient(originalRequest);
+          })
+          .catch((err) => Promise.reject(err));
+      }
+
+      originalRequest._retry = true;
+      isRefreshing = true;
+
+      try {
+        // Call the refresh endpoint using direct POST
+        const res = await axiosClient.post("/auth/refresh");
+        const newAccessToken = res.data?.payload?.data?.access_token;
+
+        if (newAccessToken) {
+          tokenService.setAccessToken(newAccessToken);
+          originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+          processQueue(null, newAccessToken);
+          return axiosClient(originalRequest);
+        } else {
+          throw new Error("No access token returned from refresh.");
+        }
+      } catch (refreshError) {
+        processQueue(refreshError, null);
+        tokenService.clearAuth();
+        window.location.href = "/login";
+        return Promise.reject(refreshError);
+      } finally {
+        isRefreshing = false;
+      }
     }
+
     return Promise.reject(error);
   }
 );
