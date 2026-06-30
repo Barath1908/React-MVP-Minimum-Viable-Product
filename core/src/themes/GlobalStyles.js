@@ -186,6 +186,161 @@ const GlobalStyles = createGlobalStyle`
   .text-success { color: ${({ theme }) => theme.colors.success};   }
   .text-danger  { color: ${({ theme }) => theme.colors.danger};    }
   .text-warning { color: ${({ theme }) => theme.colors.warning};   }
+
+  /* ── Ant Design Select Dropdown Styling ───────────────────── */
+  .ant-select-dropdown {
+    background-color: ${({ theme }) => theme.colors.backgroundCard || theme.colors.inputBackground} !important;
+    border: 1px solid ${({ theme }) => theme.colors.border} !important;
+    border-radius: 8px !important;
+    padding: 4px !important;
+  }
+  .ant-select-item {
+    color: ${({ theme }) => theme.colors.textPrimary} !important;
+    border-radius: 6px !important;
+    transition: background 0.15s ease !important;
+  }
+  .ant-select-item-option-active {
+    background-color: ${({ theme }) => theme.colors.tableRowHover || 'rgba(255, 255, 255, 0.08)'} !important;
+  }
+  .ant-select-item-option-selected {
+    background-color: ${({ theme }) => theme.colors.primary} !important;
+    color: #fff !important;
+  }
+
+  /* ── Ant Design Modal Overrides ───────────────────────────── */
+  .ant-modal-content {
+    background-color: ${({ theme }) => theme.colors.backgroundCard || '#1a1d27'} !important;
+    border: 1px solid ${({ theme }) => theme.colors.border || '#2a2d3e'} !important;
+    border-radius: 16px !important;
+    padding: 24px !important;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6) !important;
+  }
+  .ant-modal-header {
+    background-color: transparent !important;
+    border-bottom: 1px solid ${({ theme }) => theme.colors.border || '#2a2d3e'} !important;
+    padding-bottom: 16px !important;
+    margin-bottom: 16px !important;
+  }
+  .ant-modal-title {
+    color: ${({ theme }) => theme.colors.textPrimary || '#e8eaf6'} !important;
+    font-family: ${({ theme }) => theme.fonts.primary} !important;
+    font-size: 20px !important;
+    font-weight: 700 !important;
+  }
+  .ant-modal-body {
+    background-color: transparent !important;
+  }
+  .ant-modal-footer {
+    background-color: transparent !important;
+    border-top: 1px solid ${({ theme }) => theme.colors.border || '#2a2d3e'} !important;
+    padding-top: 16px !important;
+    margin-top: 16px !important;
+  }
+  .ant-modal-close {
+    color: ${({ theme }) => theme.colors.textSecondary || '#9094a6'} !important;
+    transition: color 0.15s ease !important;
+    &:hover {
+      color: ${({ theme }) => theme.colors.primary || '#fff'} !important;
+    }
+  }
+
+  /* ── MUI Global Style Overrides ───────────────────────────── */
+  
+  /* Inputs & TextFields */
+  .MuiTextField-root,
+  .MuiInputBase-root {
+    background-color: ${({ theme }) => theme.colors.inputBackground} !important;
+    color: ${({ theme }) => theme.colors.textPrimary} !important;
+    border-radius: 8px !important;
+  }
+
+  .MuiInputBase-input {
+    color: ${({ theme }) => theme.colors.textPrimary} !important;
+    font-family: ${({ theme }) => theme.fonts.primary} !important;
+    font-size: ${({ theme }) => theme.fontSizes.md} !important;
+  }
+
+  /* Outlined Input Borders */
+  .MuiOutlinedInput-notchedOutline {
+    border-color: ${({ theme }) => theme.colors.inputBorder || theme.colors.border} !important;
+    border-width: 1px !important;
+    border-radius: 8px !important;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  /* Hover & Focus Borders */
+  .MuiInputBase-root:hover .MuiOutlinedInput-notchedOutline {
+    border-color: ${({ theme }) => theme.colors.primary} !important;
+  }
+
+  .MuiInputBase-root.Mui-focused .MuiOutlinedInput-notchedOutline {
+    border-color: ${({ theme }) => theme.colors.inputFocus || theme.colors.primary} !important;
+    border-width: 1.5px !important;
+  }
+
+  /* Labels */
+  .MuiInputLabel-root {
+    color: ${({ theme }) => theme.colors.textSecondary || theme.colors.textMuted} !important;
+    font-family: ${({ theme }) => theme.fonts.primary} !important;
+  }
+
+  .MuiInputLabel-root.Mui-focused {
+    color: ${({ theme }) => theme.colors.primary} !important;
+  }
+
+  .MuiInputLabel-root.MuiInputLabel-shrink {
+    background-color: ${({ theme }) => theme.colors.backgroundCard || '#1a1d27'} !important;
+    padding: 0 6px !important;
+    margin-left: -2px !important;
+  }
+
+  .ant-modal-content .MuiInputLabel-root.MuiInputLabel-shrink {
+    background-color: #13151f !important;
+  }
+
+  /* Icons / Adornments */
+  .MuiInputAdornment-root {
+    color: ${({ theme }) => theme.colors.textMuted} !important;
+  }
+  .MuiSvgIcon-root {
+    color: ${({ theme }) => theme.colors.textSecondary} !important;
+  }
+
+  /* Select Popovers & Menus */
+  .MuiMenu-paper {
+    background-color: ${({ theme }) => theme.colors.backgroundCard || theme.colors.inputBackground} !important;
+    border: 1px solid ${({ theme }) => theme.colors.border} !important;
+    border-radius: 8px !important;
+    color: ${({ theme }) => theme.colors.textPrimary} !important;
+  }
+
+  .MuiMenuItem-root {
+    font-family: ${({ theme }) => theme.fonts.primary} !important;
+    font-size: ${({ theme }) => theme.fontSizes.md} !important;
+    color: ${({ theme }) => theme.colors.textPrimary} !important;
+    transition: background-color 0.15s ease !important;
+  }
+
+  .MuiMenuItem-root:hover {
+    background-color: ${({ theme }) => theme.colors.tableRowHover || 'rgba(255, 255, 255, 0.08)'} !important;
+  }
+
+  .MuiMenuItem-root.Mui-selected {
+    background-color: ${({ theme }) => theme.colors.primary} !important;
+    color: #fff !important;
+  }
+
+  .MuiMenuItem-root.Mui-selected:hover {
+    background-color: ${({ theme }) => theme.colors.primaryHover || theme.colors.primary} !important;
+  }
+
+  /* MUI Buttons Override */
+  .MuiButton-root {
+    text-transform: none !important;
+    font-family: ${({ theme }) => theme.fonts.primary} !important;
+    font-weight: ${({ theme }) => theme.fontWeights.semibold || '600'} !important;
+    border-radius: 8px !important;
+  }
 `;
 
 export default GlobalStyles;
