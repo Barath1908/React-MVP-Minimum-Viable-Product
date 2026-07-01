@@ -16,12 +16,12 @@ const lightTheme = {
     textMuted:      '#a0aec0',
     textInverse:    '#ffffff',
 
-    primary:        '#3182ce',
-    primaryHover:   '#2b6cb0',
+    primary:        '#7c5cbf',
+    primaryHover:   '#6a4daa',
     primaryLight:   '#ebf4ff',
 
-    accent:         '#805ad5',
-    accentHover:    '#6b46c1',
+    accent:         '#7c5cbf',
+    accentHover:    '#6a4daa',
 
     success:        '#38a169',
     successLight:   '#f0fff4',
@@ -37,7 +37,7 @@ const lightTheme = {
 
     inputBackground:'#ffffff',
     inputBorder:    '#cbd5e0',
-    inputFocus:     '#3182ce',
+    inputFocus:     '#7c5cbf',
 
     tableHeader:    '#f7fafc',
     tableRow:       '#ffffff',

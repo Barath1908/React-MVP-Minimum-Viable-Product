@@ -21,6 +21,14 @@ const tenantService = {
     const response = await axiosClient.get('/tenant/config');
     return response.data;
   },
+
+  // Update tenant theme in the database
+  updateTenantTheme: async (theme) => {
+    const response = await axiosClient.put('/tenant/theme', {
+      payload: { theme },
+    });
+    return response.data;
+  },
 };
 
 export default tenantService;
