@@ -2,11 +2,17 @@ import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import styled from "styled-components";
 import { Grid, Container, Icon } from "semantic-ui-react";
-import { Card, CardContent, Typography, Box, Alert, Button, TextField, MenuItem, InputAdornment, IconButton } from "@mui/material";
+import { Typography, Box, MenuItem, InputAdornment, IconButton } from "@mui/material";
 import { Form } from "antd";
 import authAPI from "../../modules/auth/authAPI";
 import useAuth from "../../modules/auth/hooks/useAuth";
 import { ROUTES, ROLES } from "../../utils/constants";
+import {
+  StyledButton,
+  StyledTextField,
+  StyledCard,
+  StyledAlert,
+} from "../../components/common";
 
 const PageWrapper = styled.div`
   min-height: 100vh;
@@ -17,14 +23,6 @@ const PageWrapper = styled.div`
   padding: 40px 0;
 `;
 
-const StyledCard = styled(Card)`
-  background: ${({ theme }) => theme.colors.backgroundCard} !important;
-  border: 1px solid ${({ theme }) => theme.colors.border} !important;
-  border-radius: 16px !important;
-  width: 100%;
-  max-width: 460px;
-`;
-
 const FormWrapper = styled.div`
   .ant-form-item {
     margin-bottom: 20px !important;
@@ -33,6 +31,21 @@ const FormWrapper = styled.div`
     color: ${({ theme }) => theme.colors.danger || '#ff4d4f'} !important;
     font-size: 13px !important;
     margin-top: 4px !important;
+  }
+`;
+
+const TitleText = styled(Typography)`
+  && {
+    color: ${(props) => props.theme.colors?.textPrimary || '#ffffff'};
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+`;
+
+const SubtitleText = styled(Typography)`
+  && {
+    color: ${(props) => props.theme.colors?.textSecondary || '#9094a6'};
+    font-size: 14px;
   }
 `;
 
@@ -59,7 +72,6 @@ const RegisterPage = () => {
     setLoading(true);
 
     try {
-      // Register — no tenant_id needed
       await authAPI.register({
         role_id:    values.role_id,
         first_name: values.first_name,
@@ -68,7 +80,6 @@ const RegisterPage = () => {
         password:   values.password,
       });
 
-      // Auto login after register
       login({
         email:    values.email,
         password: values.password,
@@ -89,170 +100,147 @@ const RegisterPage = () => {
         <Grid centered>
           <Grid.Column mobile={16} tablet={10} computer={7}>
             <Box sx={{ textAlign: 'center', mb: 3 }}>
-              <Typography
-                variant="h5"
-                sx={{ color: '#e8eaf6', fontWeight: 700, mb: 0.5 }}
-              >
+              <TitleText variant="h5">
                 Create Account
-              </Typography>
-              <Typography sx={{ color: '#9094a6', fontSize: '14px' }}>
+              </TitleText>
+              <SubtitleText>
                 Register as a new staff member
-              </Typography>
+              </SubtitleText>
             </Box>
 
-            <StyledCard>
-              <CardContent sx={{ p: 4 }}>
-                {error && (
-                  <Alert severity="error" sx={{ mb: 2, borderRadius: '8px' }}>
-                    {error}
-                  </Alert>
-                )}
+            <StyledCard sx={{ width: '100%', maxWidth: '460px', margin: '0 auto', '& .MuiCardContent-root': { p: 4 } }}>
+              {error && (
+                <StyledAlert severity="error">
+                  {error}
+                </StyledAlert>
+              )}
 
-                <FormWrapper>
-                  <Form
-                    form={form}
-                    layout="vertical"
-                    onFinish={handleSubmit}
+              <FormWrapper>
+                <Form
+                  form={form}
+                  layout="vertical"
+                  onFinish={handleSubmit}
+                >
+                  <Form.Item
+                    name="role_id"
+                    initialValue=""
+                    style={{ marginBottom: '20px' }}
+                    rules={[{ required: true, message: 'Please select a role' }]}
                   >
-                    <Form.Item
-                      name="role_id"
-                      initialValue=""
-                      rules={[{ required: true, message: 'Please select a role' }]}
-                    >
-                      <TextField
-                        select
-                        fullWidth
-                        variant="outlined"
-                        label="Role"
-                        defaultValue=""
-                        slotProps={{
-                          select: {
-                            MenuProps: {
-                              disablePortal: true,
-                            }
+                    <StyledTextField
+                      select
+                      label="Role"
+                      defaultValue=""
+                      slotProps={{
+                        select: {
+                          MenuProps: {
+                            disablePortal: true,
                           }
-                        }}
-                      >
-                        <MenuItem value={2}>Provider (Doctor)</MenuItem>
-                        <MenuItem value={3}>Nurse</MenuItem>
-                        <MenuItem value={4}>Patient</MenuItem>
-                        <MenuItem value={5}>Pharmacist</MenuItem>
-                        <MenuItem value={6}>Receptionist</MenuItem>
-                      </TextField>
-                    </Form.Item>
-
-                    <Box sx={{ display: 'flex', gap: 2 }}>
-                      <Form.Item
-                        name="first_name"
-                        initialValue=""
-                        style={{ flex: 1 }}
-                        rules={[{ required: true, message: 'Required' }]}
-                      >
-                        <TextField
-                          fullWidth
-                          variant="outlined"
-                          label="First Name"
-                          placeholder="John"
-                        />
-                      </Form.Item>
-
-                      <Form.Item
-                        name="last_name"
-                        initialValue=""
-                        style={{ flex: 1 }}
-                        rules={[{ required: true, message: 'Required' }]}
-                      >
-                        <TextField
-                          fullWidth
-                          variant="outlined"
-                          label="Last Name"
-                          placeholder="Smith"
-                        />
-                      </Form.Item>
-                    </Box>
-
-                    <Form.Item
-                      name="email"
-                      initialValue=""
-                      rules={[
-                        { required: true, message: 'Email is required' },
-                        { type: 'email',  message: 'Enter a valid email' },
-                      ]}
+                        }
+                      }}
                     >
-                      <TextField
-                        fullWidth
-                        variant="outlined"
-                        label="Email"
-                        placeholder="john@hospital.com"
+                      <MenuItem value={2}>Provider (Doctor)</MenuItem>
+                      <MenuItem value={3}>Nurse</MenuItem>
+                      <MenuItem value={4}>Patient</MenuItem>
+                      <MenuItem value={5}>Pharmacist</MenuItem>
+                      <MenuItem value={6}>Receptionist</MenuItem>
+                    </StyledTextField>
+                  </Form.Item>
+
+                  <Box sx={{ display: 'flex', gap: 2 }}>
+                    <Form.Item
+                      name="first_name"
+                      initialValue=""
+                      style={{ flex: 1, marginBottom: '20px' }}
+                      rules={[{ required: true, message: 'Required' }]}
+                    >
+                      <StyledTextField
+                        label="First Name"
+                        placeholder="John"
                       />
                     </Form.Item>
 
                     <Form.Item
-                      name="password"
+                      name="last_name"
                       initialValue=""
-                      rules={[
-                        { required: true, message: 'Password is required' },
-                        { min: 8, message: 'At least 8 characters' },
-                      ]}
+                      style={{ flex: 1, marginBottom: '20px' }}
+                      rules={[{ required: true, message: 'Required' }]}
                     >
-                      <TextField
-                        fullWidth
-                        variant="outlined"
-                        label="Password"
-                        placeholder="Min. 8 characters"
-                        type={showPassword ? 'text' : 'password'}
-                        slotProps={{
-                          input: {
-                            endAdornment: (
-                              <InputAdornment position="end">
-                                <IconButton
-                                  onClick={() => setShowPassword(!showPassword)}
-                                  edge="end"
-                                  sx={{ color: '#9094a6' }}
-                                >
-                                  <Icon name={showPassword ? 'eye' : 'eye slash'} style={{ fontSize: '16px', margin: 0 }} />
-                                </IconButton>
-                              </InputAdornment>
-                            ),
-                          }
-                        }}
+                      <StyledTextField
+                        label="Last Name"
+                        placeholder="Smith"
                       />
                     </Form.Item>
+                  </Box>
 
-                    <Form.Item style={{ marginBottom: '8px' }}>
-                      <Button
-                        type="submit"
-                        fullWidth
-                        variant="contained"
-                        disabled={loading}
-                        sx={{
-                          height: '44px',
-                          background: 'linear-gradient(135deg, #4f8ef7, #7c5cbf)',
-                          color: '#fff',
-                          borderRadius: '10px',
-                          fontSize: '15px',
-                          fontWeight: 600,
-                          textTransform: 'none',
-                          '&:hover': {
-                            background: 'linear-gradient(135deg, #3a7ae0, #6a4daa)',
-                          },
-                        }}
-                      >
-                        {loading ? 'Creating Account...' : 'Register'}
-                      </Button>
-                    </Form.Item>
-                  </Form>
-                </FormWrapper>
+                  <Form.Item
+                    name="email"
+                    initialValue=""
+                    style={{ marginBottom: '20px' }}
+                    rules={[
+                      { required: true, message: 'Email is required' },
+                      { type: 'email',  message: 'Enter a valid email' },
+                    ]}
+                  >
+                    <StyledTextField
+                      label="Email"
+                      placeholder="john@hospital.com"
+                    />
+                  </Form.Item>
 
-                <Box sx={{ textAlign: 'center', mt: 1 }}>
-                  <Typography sx={{ color: '#9094a6', fontSize: '14px' }}>
-                    Already have an account?{' '}
-                    <Link to={ROUTES.LOGIN} style={{ color: '#4f8ef7' }}>
-                      Sign In
-                    </Link>
-                  </Typography>
-                </Box>
-              </CardContent>
+                  <Form.Item
+                    name="password"
+                    initialValue=""
+                    style={{ marginBottom: '20px' }}
+                    rules={[
+                      { required: true, message: 'Password is required' },
+                      { min: 8, message: 'At least 8 characters' },
+                    ]}
+                  >
+                    <StyledTextField
+                      label="Password"
+                      placeholder="Min. 8 characters"
+                      type={showPassword ? 'text' : 'password'}
+                      slotProps={{
+                        input: {
+                          endAdornment: (
+                            <InputAdornment position="end">
+                              <IconButton
+                                onClick={() => setShowPassword(!showPassword)}
+                                edge="end"
+                                sx={{ color: '#9094a6' }}
+                              >
+                                <Icon name={showPassword ? 'eye' : 'eye slash'} style={{ fontSize: '16px', margin: 0 }} />
+                              </IconButton>
+                            </InputAdornment>
+                          ),
+                        }
+                      }}
+                    />
+                  </Form.Item>
+
+                  <Form.Item style={{ marginBottom: '8px' }}>
+                    <StyledButton
+                      type="submit"
+                      fullWidth
+                      variant="contained"
+                      disabled={loading}
+                      sx={{ height: '44px', fontSize: '15px' }}
+                    >
+                      {loading ? 'Creating Account...' : 'Register'}
+                    </StyledButton>
+                  </Form.Item>
+                </Form>
+              </FormWrapper>
+
+              <Box sx={{ textAlign: 'center', mt: 1 }}>
+                <Typography sx={{ color: '#9094a6', fontSize: '14px' }}>
+                  Already have an account?{' '}
+                  <Link to={ROUTES.LOGIN} style={{ color: '#7c5cbf', fontWeight: 600 }}>
+                    Sign In
+                  </Link>
+                </Typography>
+              </Box>
             </StyledCard>
           </Grid.Column>
         </Grid>
