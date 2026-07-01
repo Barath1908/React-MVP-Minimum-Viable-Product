@@ -4,6 +4,7 @@ import { Provider } from "react-redux";
 
 import App from "./App";
 import "semantic-ui-css/semantic.min.css";
+import "antd/dist/reset.css";
 
 import { store } from "./app/store";
 import { ThemeProvider } from "./context/ThemeContext";

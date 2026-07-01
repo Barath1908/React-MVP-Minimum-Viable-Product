@@ -1,5 +1,3 @@
-// Replace the API_BASE_URL line in your existing environment.js with this:
-
 const getApiBaseUrl = () => {
   const base = process.env.REACT_APP_API_BASE_URL || 'http://localhost/Task-012/backend/public';
   try {
