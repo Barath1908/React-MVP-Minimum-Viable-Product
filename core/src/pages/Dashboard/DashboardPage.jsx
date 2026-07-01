@@ -28,6 +28,59 @@ const DashboardPage = () => {
     }
   };
 
+  const handleRegisterUser = async () => {
+    try {
+      const values = await form.validateFields();
+      setRegisterLoading(true);
+      setRegisterError("");
+
+      await authAPI.register({
+        role_id:    values.role_id,
+        first_name: values.first_name,
+        last_name:  values.last_name,
+        email:      values.email,
+        phone:      values.phone,
+        password:   values.password,
+      });
+
+      antMsg.success("User registered successfully!");
+      setRegisterModalOpen(false);
+      form.resetFields();
+      fetchDashboard();
+    } catch (err) {
+      if (err?.errorFields) return; // Ant Design form validation
+      setRegisterError(
+        err?.response?.data?.payload?.message || err?.message || "Registration failed."
+      );
+    } finally {
+      setRegisterLoading(false);
+    }
+  };
+
+  const handleChangePassword = async () => {
+    try {
+      const values = await changePasswordForm.validateFields();
+      setChangePasswordLoading(true);
+      setChangePasswordError("");
+
+      await authAPI.changePassword({
+        current_password: values.current_password,
+        new_password:     values.new_password,
+      });
+
+      antMsg.success("Password changed successfully!");
+      setChangePasswordModalOpen(false);
+      changePasswordForm.resetFields();
+    } catch (err) {
+      if (err?.errorFields) return; // Ant Design form validation
+      setChangePasswordError(
+        err?.response?.data?.payload?.message || err?.message || "Failed to update password."
+      );
+    } finally {
+      setChangePasswordLoading(false);
+    }
+  };
+
   if (loading) return <h2>Loading Dashboard...</h2>;
   if (error) return <h2>{error}</h2>;
   if (!summary) return <h2>No data available.</h2>;

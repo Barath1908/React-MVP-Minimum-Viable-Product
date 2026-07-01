@@ -10,6 +10,7 @@ import {
 } from "./securitySlice";
 
 import tokenService from "../../services/tokenService";
+import authAPI from "../auth/authAPI";
 import { logoutSuccess } from "../auth/authSlice";
 
 // ─── Helpers ──────────────────────────────────────────────
@@ -143,11 +144,24 @@ function* validateAccessToken() {
   // Token has expired locally — exp < now
   // Backend ACCESS_TOKEN_EXPIRY = 900 seconds (15 min) from .env
   if (isTokenExpired(accessToken)) {
-    yield put(setTokenValid(false));
-    yield put(setSessionExpired(true));
-    throw new Error(
-      "Access token has expired. Please log in again."
-    );
+    try {
+      // Try to refresh token instead of immediately logging out
+      const response = yield call(authAPI.refreshToken);
+      const newAccessToken = response?.payload?.data?.access_token;
+      if (newAccessToken) {
+        tokenService.setAccessToken(newAccessToken);
+        yield put(setTokenValid(true));
+        return newAccessToken;
+      } else {
+        throw new Error("No access token returned from refresh.");
+      }
+    } catch (refreshError) {
+      yield put(setTokenValid(false));
+      yield put(setSessionExpired(true));
+      throw new Error(
+        "Session expired. Please log in again."
+      );
+    }
   }
 
   yield put(setTokenValid(true));
