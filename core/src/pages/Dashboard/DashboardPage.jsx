@@ -111,6 +111,7 @@ const DashboardPage = () => {
       antMsg.success("User registered successfully!");
       setRegisterModalOpen(false);
       form.resetFields();
+      fetchDashboard();
     } catch (err) {
       if (err?.errorFields) return; // Ant Design form validation
       setRegisterError(
