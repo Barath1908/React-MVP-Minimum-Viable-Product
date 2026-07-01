@@ -1,5 +1,3 @@
-// src/config/tenantConfig.js
-
 const tenantConfig = {
   defaultTenant: "default",
 

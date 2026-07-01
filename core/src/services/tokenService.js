@@ -28,6 +28,19 @@ const tokenService = {
     localStorage.removeItem(getPrefixedKey(ACCESS_TOKEN_KEY));
   },
 
+  // Aliases for compatibility with older code (Hema)
+  getToken() {
+    return this.getAccessToken();
+  },
+
+  setToken(token) {
+    this.setAccessToken(token);
+  },
+
+  removeToken() {
+    this.removeAccessToken();
+  },
+
   // CSRF Token
   getCsrfToken() {
     return localStorage.getItem(getPrefixedKey(CSRF_TOKEN_KEY));
