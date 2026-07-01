@@ -1,52 +1,45 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import styled from "styled-components";
-import { Grid, Container, Icon } from "semantic-ui-react";
-import { Card, CardContent, Typography, Box, Alert, Button, TextField, InputAdornment, IconButton } from "@mui/material";
+import { useSelector } from "react-redux";
+import { Icon } from "semantic-ui-react";
+import { InputAdornment, IconButton, Box } from "@mui/material";
 import { Form } from "antd";
 import useAuth from "../../modules/auth/hooks/useAuth";
 import { ROUTES, ROLES } from "../../utils/constants";
-import { useSelector } from "react-redux";
-
-// ── Styled ────────────────────────────────────────────────────
-
-const PageWrapper = styled.div`
-  min-height: 100vh;
-  background: ${({ theme }) => theme.colors.background};
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
-
-const StyledCard = styled(Card)`
-  background: ${({ theme }) => theme.colors.backgroundCard} !important;
-  border: 1px solid ${({ theme }) => theme.colors.border} !important;
-  border-radius: 16px !important;
-  width: 100%;
-  max-width: 420px;
-`;
-
-const FormWrapper = styled.div`
-  .ant-form-item {
-    margin-bottom: 20px !important;
-  }
-  .ant-form-item-explain-error {
-    color: ${({ theme }) => theme.colors.danger || '#ff4d4f'} !important;
-    font-size: 13px !important;
-    margin-top: 4px !important;
-  }
-`;
+import {
+  StyledButton,
+  StyledTextField,
+  StyledAlert,
+} from "../../components/common";
+import {
+  PageWrapper,
+  BrandPanel,
+  DecorativeCircle,
+  FormPanel,
+  FormCard,
+  LogoRow,
+  HeroText,
+  HeroTitle,
+  HeroSubtitle,
+  FeatureList,
+  FeatureItem,
+  FooterNote,
+  FormHeader,
+  FormTitle,
+  FormSubtitle,
+  FormWrapper,
+  BackLink,
+} from "../../components/styled/LoginPage.styles";
 
 // ── Component ─────────────────────────────────────────────────
 
 const LoginPage = () => {
   const { login, loading, error, isAuthenticated, role } = useAuth();
-  const navigate    = useNavigate();
+  const navigate = useNavigate();
   const tenantConfig = useSelector((state) => state.tenant?.tenant);
-  const [form]      = Form.useForm();
+  const [form] = Form.useForm();
   const [showPassword, setShowPassword] = useState(false);
 
-  // Redirect after login based on role
   useEffect(() => {
     if (isAuthenticated) {
       if (role === ROLES.RECEPTIONIST) {
@@ -58,123 +51,161 @@ const LoginPage = () => {
   }, [isAuthenticated, role, navigate]);
 
   const handleSubmit = (values) => {
-    // No tenant_id — subdomain determines which DB to connect to
     login({
-      email:    values.email,
+      email: values.email,
       password: values.password,
     });
   };
 
+  const handleBackToLanding = () => {
+    const { protocol, hostname, port } = window.location;
+    const parts = hostname.split(".");
+
+    if (parts.length > 1) {
+      const baseHost = parts.slice(1).join(".");
+      const portStr = port ? `:${port}` : "";
+      window.location.href = `${protocol}//${baseHost}${portStr}`;
+    } else {
+      window.location.href = "/";
+    }
+  };
+
   return (
     <PageWrapper>
-      <Container>
-        <Grid centered>
-          <Grid.Column mobile={16} tablet={10} computer={6}>
-            <Box sx={{ textAlign: 'center', mb: 3 }}>
-              <Typography
-                variant="h5"
-                sx={{
-                  color:      '#e8eaf6',
-                  fontWeight: 700,
-                  mb:         0.5,
-                }}
+      {/* ---------- Left brand panel ---------- */}
+      <BrandPanel>
+        <DecorativeCircle style={{ width: 220, height: 220, top: -80, right: -60 }} />
+        <DecorativeCircle style={{ width: 140, height: 140, bottom: 40, left: -50 }} />
+
+        <LogoRow>
+          <Icon name="hospital" />
+          <span>{tenantConfig?.company_name || "Healthcare SaaS"}</span>
+        </LogoRow>
+
+        <HeroText>
+          <HeroTitle>
+            Welcome back to your care workspace
+          </HeroTitle>
+          <HeroSubtitle>
+            Sign in to manage patients, appointments, prescriptions, and
+            billing — all from one secure dashboard built for your team.
+          </HeroSubtitle>
+
+          <FeatureList>
+            <FeatureItem>
+              <Icon name="shield alternate" />
+              <span>Bank-grade security &amp; encrypted sessions</span>
+            </FeatureItem>
+            <FeatureItem>
+              <Icon name="clock outline" />
+              <span>Real-time appointment &amp; staff scheduling</span>
+            </FeatureItem>
+            <FeatureItem>
+              <Icon name="chart line" />
+              <span>Built-in analytics for every department</span>
+            </FeatureItem>
+          </FeatureList>
+        </HeroText>
+
+        <FooterNote>
+          © {new Date().getFullYear()} {tenantConfig?.company_name || "Healthcare SaaS"}. All rights reserved.
+        </FooterNote>
+      </BrandPanel>
+
+      {/* ---------- Right form panel ---------- */}
+      <FormPanel>
+        <FormCard>
+          <FormHeader>
+            <FormTitle>Sign In</FormTitle>
+            <FormSubtitle>Enter your credentials to access your workspace</FormSubtitle>
+          </FormHeader>
+
+          {error && <StyledAlert severity="error">{error}</StyledAlert>}
+
+          <FormWrapper>
+            <Form
+              form={form}
+              layout="vertical"
+              onFinish={handleSubmit}
+              autoComplete="off"
+            >
+              <Form.Item
+                name="email"
+                initialValue=""
+                rules={[
+                  { required: true, message: "Email is required" },
+                  { type: "email", message: "Enter a valid email" },
+                ]}
               >
-                {tenantConfig?.company_name || 'Healthcare SaaS'}
-              </Typography>
-              <Typography sx={{ color: '#9094a6', fontSize: '14px' }}>
-                Sign in to your workspace
-              </Typography>
-            </Box>
+                <StyledTextField
+                  placeholder="admin@hospital.com"
+                  slotProps={{
+                    input: {
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <Icon name="mail" style={{ fontSize: "16px", margin: "0 8px 0 0" }} />
+                        </InputAdornment>
+                      ),
+                    },
+                  }}
+                />
+              </Form.Item>
 
-            <StyledCard>
-              <CardContent sx={{ p: 4 }}>
-                {error && (
-                  <Alert severity="error" sx={{ mb: 2, borderRadius: '8px' }}>
-                    {error}
-                  </Alert>
-                )}
+              <Form.Item
+                name="password"
+                initialValue=""
+                style={{ marginTop: '34px' }}
+                rules={[{ required: true, message: "Password is required" }]}
+              >
+                <StyledTextField
+                  placeholder="Your password"
+                  type={showPassword ? "text" : "password"}
+                  slotProps={{
+                    input: {
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <Icon name="lock" style={{ fontSize: "16px", margin: "0 8px 0 0" }} />
+                        </InputAdornment>
+                      ),
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton
+                            onClick={() => setShowPassword(!showPassword)}
+                            edge="end"
+                            sx={{ color: "#9094a6" }}
+                          >
+                            <Icon
+                              name={showPassword ? "eye" : "eye slash"}
+                              style={{ fontSize: "16px", margin: 0 }}
+                            />
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                    },
+                  }}
+                />
+              </Form.Item>
 
-                <FormWrapper>
-                  <Form
-                    form={form}
-                    layout="vertical"
-                    onFinish={handleSubmit}
-                    autoComplete="off"
-                  >
-                    <Form.Item
-                      name="email"
-                      initialValue=""
-                      rules={[
-                        { required: true, message: 'Email is required' },
-                        { type: 'email',  message: 'Enter a valid email' },
-                      ]}
-                    >
-                      <TextField
-                        fullWidth
-                        variant="outlined"
-                        label="Email"
-                        placeholder="admin@hospital.com"
-                      />
-                    </Form.Item>
+              <StyledButton
+                type="submit"
+                fullWidth
+                variant="contained"
+                disabled={loading}
+                sx={{ height: "46px", fontSize: "15px", mt: 1 }}
+              >
+                {loading ? "Signing in..." : "Sign In"}
+              </StyledButton>
+            </Form>
+          </FormWrapper>
 
-                    <Form.Item
-                      name="password"
-                      initialValue=""
-                      rules={[{ required: true, message: 'Password is required' }]}
-                    >
-                      <TextField
-                        fullWidth
-                        variant="outlined"
-                        label="Password"
-                        placeholder="Your password"
-                        type={showPassword ? 'text' : 'password'}
-                        slotProps={{
-                          input: {
-                            endAdornment: (
-                              <InputAdornment position="end">
-                                <IconButton
-                                  onClick={() => setShowPassword(!showPassword)}
-                                  edge="end"
-                                  sx={{ color: '#9094a6' }}
-                                >
-                                  <Icon name={showPassword ? 'eye' : 'eye slash'} style={{ fontSize: '16px', margin: 0 }} />
-                                </IconButton>
-                              </InputAdornment>
-                            ),
-                          }
-                        }}
-                      />
-                    </Form.Item>
-
-                    <Form.Item style={{ marginBottom: '8px' }}>
-                      <Button
-                        type="submit"
-                        fullWidth
-                        variant="contained"
-                        disabled={loading}
-                        sx={{
-                          height: '44px',
-                          background: 'linear-gradient(135deg, #4f8ef7, #7c5cbf)',
-                          color: '#fff',
-                          borderRadius: '10px',
-                          fontSize: '15px',
-                          fontWeight: 600,
-                          textTransform: 'none',
-                          '&:hover': {
-                            background: 'linear-gradient(135deg, #3a7ae0, #6a4daa)',
-                          },
-                        }}
-                      >
-                        {loading ? 'Signing in...' : 'Sign In'}
-                      </Button>
-                    </Form.Item>
-                  </Form>
-                </FormWrapper>
-              </CardContent>
-            </StyledCard>
-          </Grid.Column>
-        </Grid>
-      </Container>
+          <Box sx={{ textAlign: "center" }}>
+            <BackLink onClick={handleBackToLanding}>
+              <Icon name="arrow left" />
+              Back to Homepage
+            </BackLink>
+          </Box>
+        </FormCard>
+      </FormPanel>
     </PageWrapper>
   );
 };

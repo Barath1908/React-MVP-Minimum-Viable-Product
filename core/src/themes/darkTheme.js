@@ -4,27 +4,27 @@ const darkTheme = {
   // -- Colors --------------------------------------------------
   colors: {
     // Backgrounds
-    background:     '#0f1117',
-    backgroundCard: '#1a1d27',
-    backgroundHover:'#22263a',
+    background:     '#000000',
+    backgroundCard: '#141622',
+    backgroundHover:'#1c1d2e',
 
     // Sidebar
-    sidebar:        '#13151f',
-    sidebarHover:   '#1e2130',
+    sidebar:        '#09090b',
+    sidebarHover:   '#141622',
 
     // Header
-    header:         '#13151f',
+    header:         '#09090b',
 
     // Text
-    textPrimary:    '#e8eaf6',
+    textPrimary:    '#f1f3f9',
     textSecondary:  '#9094a6',
     textMuted:      '#5c6070',
-    textInverse:    '#0f1117',
+    textInverse:    '#000000',
 
     // Brand / Primary
-    primary:        '#4f8ef7',
-    primaryHover:   '#3a7ae0',
-    primaryLight:   '#1a2d4f',
+    primary:        '#7c5cbf',
+    primaryHover:   '#6a4daa',
+    primaryLight:   '#1a103c',
 
     // Accent
     accent:         '#7c5cbf',
@@ -45,9 +45,9 @@ const darkTheme = {
     borderLight:    '#1e2130',
 
     // Input
-    inputBackground:'#1e2130',
+    inputBackground:'#141622',
     inputBorder:    '#2a2d3e',
-    inputFocus:     '#4f8ef7',
+    inputFocus:     '#7c5cbf',
 
     // Table
     tableHeader:    '#1a1d27',

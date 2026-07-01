@@ -1,62 +1,33 @@
-// const API_ENDPOINTS = {
+const API_ENDPOINTS = {
+  // Auth
+  AUTH_LOGIN: "/auth/login",
+  AUTH_REGISTER: "/auth/register",
+  AUTH_REFRESH: "/auth/refresh",
+  AUTH_LOGOUT: "/auth/logout",
+  CHANGE_PASSWORD: "/auth/change-password",
 
-//   AUTH: {
-//     LOGIN: "/auth/login",
-//     LOGOUT: "/auth/logout",
-//     REFRESH_TOKEN: "/auth/refresh-token",
-//   },
+  // Dashboard
+  DASHBOARD_SUMMARY: "/dashboard/summary",
 
-//   USERS: {
-//     GET_ALL: "/users",
-//     GET_BY_ID: "/users",
-//     CREATE: "/users",
-//     UPDATE: "/users",
-//     DELETE: "/users",
-//     ACTIVATE: "/users/activate",
-//     DEACTIVATE: "/users/deactivate",
-//   },
+  // Patients
+  PATIENTS: "/patients",
 
-//   STAFF: {
-//     GET_ALL: "/staff",
-//     CREATE: "/staff",
-//     UPDATE: "/staff",
-//     DELETE: "/staff",
-//   },
+  // Appointments
+  APPOINTMENTS: "/appointments",
 
-//   ROLES: {
-//     GET_ALL: "/roles",
-//     CREATE: "/roles",
-//     UPDATE: "/roles",
-//     DELETE: "/roles",
-//     ASSIGN: "/roles/assign",
-//   },
+  // Staff
+  STAFF: "/staff",
 
-//   BILLING: {
-//     GET_ALL: "/billing",
-//     CREATE: "/billing",
-//     UPDATE: "/billing",
-//     DELETE: "/billing",
-//   },
+  // Messages
+  MESSAGES: "/messages",
 
-//   CHAT: {
-//   GET_ALL: "/messages",
-//   CREATE: "/messages",
-//   DELETE: "/messages",
-//   },
+  // Prescriptions
+  PRESCRIPTIONS: "/prescriptions",
 
-//     NOTIFICATIONS: {
-//     GET_ALL: "/notifications",
-//     CREATE: "/notifications",
-//     DELETE: "/notifications",
-//     },
+  // Billing
+  BILLING_INVOICE: "/billing/invoice",
+  BILLING_PAYMENT: "/billing/payment",
+  BILLING_SUMMARY: "/billing/summary",
+};
 
-//     PRESCRIPTIONS: {
-//     GET_ALL: "/prescriptions",
-//     CREATE: "/prescriptions",
-//     UPDATE: "/prescriptions",
-//     DELETE: "/prescriptions",
-//     },
-
-// };
-
-// export default API_ENDPOINTS;
+export default API_ENDPOINTS;

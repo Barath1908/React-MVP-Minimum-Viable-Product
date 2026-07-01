@@ -1,15 +1,16 @@
-// export const TENANTS = {
+const tenantConfig = {
+  defaultTenant: "default",
 
-//   hospitalA: {
-//     tenantId: "tenant_001",
-//     hospitalName: "Hospital A",
-//     theme: "blue",
-//   },
+  supportedThemes: {
+    default: "light",
+    clinicA: "dark",
+    clinicB: "warm",
+  },
 
-//   hospitalB: {
-//     tenantId: "tenant_002",
-//     hospitalName: "Hospital B",
-//     theme: "green",
-//   },
+  tenantHeader: "X-Tenant",
 
-// };
+  defaultLanguage: "en",
+
+};
+
+export default tenantConfig;

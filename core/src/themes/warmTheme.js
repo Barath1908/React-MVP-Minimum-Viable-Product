@@ -4,62 +4,64 @@ const warmTheme = {
   // -- Colors --------------------------------------------------
   colors: {
     // Backgrounds
-    background:     '#fdf6f0',
-    backgroundCard: '#ffffff',
-    backgroundHover:'#fef3eb',
+    background:     '#fefbf0',
+    backgroundCard: '#fcf4db',
+    backgroundHover:'#f5e8be',
 
     // Sidebar
-    sidebar:        '#fff8f3',
-    sidebarHover:   '#fde8d8',
+    sidebar:        '#fefbf0',
+    sidebarHover:   '#fcf4db',
 
     // Header
-    header:         '#ffffff',
+    header:         '#fefbf0',
 
     // Text
-    textPrimary:    '#2d1f14',
-    textSecondary:  '#7a5c46',
-    textMuted:      '#b08070',
+    textPrimary:    '#2d1a09',
+    textSecondary:  '#6b4d3a',
+    textMuted:      '#9e7b65',
     textInverse:    '#ffffff',
 
     // Brand / Primary
-    primary:        '#e07b39',
-    primaryHover:   '#c96a28',
-    primaryLight:   '#fde8d8',
+    primary:        '#ea580c',
+    primaryHover:   '#ca3e06',
+    primaryLight:   '#fff7ed',
+    primaryGradient:'linear-gradient(135deg, #ea580c, #f97316)',
+    primaryGradientHover: 'linear-gradient(135deg, #ca3e06, #dd5a12)',
 
     // Accent
-    accent:         '#c0392b',
-    accentHover:    '#a93226',
+    accent:         '#ea580c',
+    accentHover:    '#ca3e06',
 
     // Status
     success:        '#27ae60',
     successLight:   '#d5f5e3',
     warning:        '#f39c12',
-    warningLight:   '#fef9e7',
+    warningLight:   '#fff7ed',
     danger:         '#e74c3c',
     dangerLight:    '#fadbd8',
     info:           '#2980b9',
     infoLight:      '#d6eaf8',
 
     // Border
-    border:         '#f0ddd0',
-    borderLight:    '#fae8dc',
+    border:         '#f5e3be',
+    borderLight:    '#faecd2',
 
     // Input
-    inputBackground:'#fff8f3',
-    inputBorder:    '#f0ddd0',
-    inputFocus:     '#e07b39',
+    inputBackground:'#ffffff',
+    inputBorder:    '#f5e3be',
+    inputFocus:     '#ea580c',
 
     // Table
-    tableHeader:    '#fde8d8',
+    tableHeader:    '#ffedd5',
     tableRow:       '#ffffff',
-    tableRowHover:  '#fef3eb',
+    tableRowHover:  '#fff7ed',
 
     // Badge
-    badgeBackground:'#fde8d8',
+    badgeBackground:'#ffedd5',
 
     // Scrollbar
-    scrollbar:      '#f0ddd0',
-    scrollbarHover: '#e07b39',
+    scrollbar:      '#ffedd5',
+    scrollbarHover: '#ea580c',
   },
 
   // -- Typography ----------------------------------------------
