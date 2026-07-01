@@ -28,7 +28,7 @@ export const ThemeProvider = ({ children }) => {
   const [themeName, setThemeName] = useState(() => {
     const isLanding = !subdomain;
     if (isLanding) {
-      return 'dark';
+      return 'light';
     }
     return localStorage.getItem('theme') || environment.DEFAULT_THEME;
   });
@@ -41,10 +41,10 @@ export const ThemeProvider = ({ children }) => {
     }
   }, [tenantConfig?.theme, subdomain]);
 
-  // Keep landing page on dark theme when subdomain is absent
+  // Keep landing page on light theme when subdomain is absent
   useEffect(() => {
     if (!subdomain) {
-      setThemeName('dark');
+      setThemeName('light');
     }
   }, [subdomain]);
 
@@ -60,6 +60,13 @@ export const ThemeProvider = ({ children }) => {
     localStorage.setItem('theme', next);
   }, [themeName]);
 
+  const changeTheme = useCallback((name) => {
+    if (themeMap[name]) {
+      setThemeName(name);
+      localStorage.setItem('theme', name);
+    }
+  }, []);
+
   const themeObject = themeMap[themeName] || darkTheme;
 
   const value = useMemo(
@@ -67,9 +74,10 @@ export const ThemeProvider = ({ children }) => {
       theme:      themeObject,
       themeName,
       toggleTheme,
+      changeTheme,
       isDarkMode: themeName === 'dark',
     }),
-    [themeObject, themeName, toggleTheme]
+    [themeObject, themeName, toggleTheme, changeTheme]
   );
 
   return (
