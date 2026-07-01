@@ -11,6 +11,7 @@ import ProtectedRoute   from './ProtectedRoute';
 import RoleBasedRoute   from './RoleBasedRoute';
 import { ROUTES, ROLES } from '../utils/constants';
 import getTenantFromDomain from '../utils/getTenantFromDomain';
+import WorkspaceLayout from '../components/layout/WorkspaceLayout';
 
 // Lazy load page components for code splitting
 const LandingPage      = lazy(() => import('../pages/Landing/LandingPage'));
@@ -19,6 +20,10 @@ const RegisterPage     = lazy(() => import('../pages/Auth/RegisterPage'));
 const DashboardPage    = lazy(() => import('../pages/Dashboard/DashboardPage'));
 const UnauthorizedPage = lazy(() => import('../pages/Auth/UnauthorizedPage'));
 const LogoutPage       = lazy(() => import('../pages/Auth/LogoutPage'));
+const StaffManagement   = lazy(() => import('../pages/Staff/StaffManagement'));
+const BillingPage       = lazy(() => import('../pages/Billing/InvoicePage'));
+const ChatPage          = lazy(() => import('../pages/Chat/ChatPage'));
+const PrescriptionsPage = lazy(() => import('../pages/Prescriptions/PrescriptionsPage'));
 
 // ── Styled Fallback Loader ──────────────────────────────────
 const spin = keyframes`
@@ -96,10 +101,17 @@ const AppRouter = () => {
             element={<Navigate to={ROUTES.LOGIN} replace />}
           />
 
+          {/* Nested routes inside WorkspaceLayout */}
           <Route
-            path={ROUTES.DASHBOARD}
             element={
               <ProtectedRoute>
+                <WorkspaceLayout />
+              </ProtectedRoute>
+            }
+          >
+            <Route
+              path={ROUTES.DASHBOARD}
+              element={
                 <RoleBasedRoute
                   allowedRoles={[
                     ROLES.ADMIN,
@@ -112,9 +124,64 @@ const AppRouter = () => {
                 >
                   <DashboardPage />
                 </RoleBasedRoute>
-              </ProtectedRoute>
-            }
-          />
+              }
+            />
+
+            <Route
+              path={ROUTES.STAFF}
+              element={
+                <RoleBasedRoute allowedRoles={[ROLES.ADMIN]}>
+                  <StaffManagement />
+                </RoleBasedRoute>
+              }
+            />
+
+            <Route
+              path={ROUTES.BILLING}
+              element={
+                <RoleBasedRoute
+                  allowedRoles={[
+                    ROLES.ADMIN,
+                    ROLES.PROVIDER,
+                    ROLES.PATIENT,
+                  ]}
+                >
+                  <BillingPage />
+                </RoleBasedRoute>
+              }
+            />
+
+            <Route
+              path={ROUTES.CHAT}
+              element={
+                <RoleBasedRoute
+                  allowedRoles={[
+                    ROLES.PROVIDER,
+                    ROLES.NURSE,
+                  ]}
+                >
+                  <ChatPage />
+                </RoleBasedRoute>
+              }
+            />
+
+            <Route
+              path={ROUTES.PRESCRIPTIONS}
+              element={
+                <RoleBasedRoute
+                  allowedRoles={[
+                    ROLES.ADMIN,
+                    ROLES.PROVIDER,
+                    ROLES.NURSE,
+                    ROLES.PHARMACIST,
+                    ROLES.PATIENT,
+                  ]}
+                >
+                  <PrescriptionsPage />
+                </RoleBasedRoute>
+              }
+            />
+          </Route>
 
           <Route path="*" element={<Navigate to={ROUTES.LOGIN} replace />} />
         </Routes>
