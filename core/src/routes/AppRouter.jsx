@@ -24,6 +24,12 @@ const StaffManagement   = lazy(() => import('../pages/Staff/StaffManagement'));
 const BillingPage       = lazy(() => import('../pages/Billing/InvoicePage'));
 const ChatPage          = lazy(() => import('../pages/Chat/ChatPage'));
 const PrescriptionsPage = lazy(() => import('../pages/Prescriptions/PrescriptionsPage'));
+const PatientList      = lazy(() => import('../pages/Patients/PatientList'));
+const PatientForm      = lazy(() => import('../pages/Patients/PatientForm'));
+const PatientProfile   = lazy(() => import('../pages/Patients/PatientProfile'));
+const AppointmentList  = lazy(() => import('../pages/Appointments/AppointmentList'));
+const AppointmentForm  = lazy(() => import('../pages/Appointments/AppointmentForm'));
+const AppointmentDetails = lazy(() => import('../pages/Appointments/AppointmentDetails'));
 
 // ── Styled Fallback Loader ──────────────────────────────────
 const spin = keyframes`
@@ -178,6 +184,74 @@ const AppRouter = () => {
                   ]}
                 >
                   <PrescriptionsPage />
+                </RoleBasedRoute>
+              }
+            />
+
+            {/* Patient routes */}
+            <Route
+              path={ROUTES.PATIENTS}
+              element={
+                <RoleBasedRoute allowedRoles={[ROLES.ADMIN, ROLES.PROVIDER, ROLES.NURSE]}>
+                  <PatientList />
+                </RoleBasedRoute>
+              }
+            />
+            <Route
+              path={ROUTES.PATIENT_CREATE}
+              element={
+                <RoleBasedRoute allowedRoles={[ROLES.ADMIN, ROLES.PROVIDER, ROLES.NURSE]}>
+                  <PatientForm />
+                </RoleBasedRoute>
+              }
+            />
+            <Route
+              path={ROUTES.PATIENT_PROFILE}
+              element={
+                <RoleBasedRoute allowedRoles={[ROLES.ADMIN, ROLES.PROVIDER, ROLES.NURSE, ROLES.PATIENT]}>
+                  <PatientProfile />
+                </RoleBasedRoute>
+              }
+            />
+            <Route
+              path={ROUTES.PATIENT_EDIT}
+              element={
+                <RoleBasedRoute allowedRoles={[ROLES.ADMIN, ROLES.PROVIDER, ROLES.NURSE]}>
+                  <PatientForm isEdit={true} />
+                </RoleBasedRoute>
+              }
+            />
+
+            {/* Appointment routes */}
+            <Route
+              path={ROUTES.APPOINTMENTS}
+              element={
+                <RoleBasedRoute allowedRoles={[ROLES.PROVIDER, ROLES.NURSE, ROLES.RECEPTIONIST, ROLES.PATIENT]}>
+                  <AppointmentList />
+                </RoleBasedRoute>
+              }
+            />
+            <Route
+              path={ROUTES.APPOINTMENT_CREATE}
+              element={
+                <RoleBasedRoute allowedRoles={[ROLES.PROVIDER, ROLES.NURSE, ROLES.RECEPTIONIST, ROLES.PATIENT]}>
+                  <AppointmentForm />
+                </RoleBasedRoute>
+              }
+            />
+            <Route
+              path={ROUTES.APPOINTMENT_DETAIL}
+              element={
+                <RoleBasedRoute allowedRoles={[ROLES.PROVIDER, ROLES.NURSE, ROLES.RECEPTIONIST, ROLES.PATIENT]}>
+                  <AppointmentDetails />
+                </RoleBasedRoute>
+              }
+            />
+            <Route
+              path={ROUTES.APPOINTMENT_EDIT}
+              element={
+                <RoleBasedRoute allowedRoles={[ROLES.PROVIDER, ROLES.NURSE, ROLES.RECEPTIONIST]}>
+                  <AppointmentForm isEdit={true} />
                 </RoleBasedRoute>
               }
             />

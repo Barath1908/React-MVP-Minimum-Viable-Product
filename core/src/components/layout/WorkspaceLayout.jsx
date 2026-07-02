@@ -138,7 +138,15 @@ const WorkspaceLayout = () => {
         return "Communications Hub";
       case ROUTES.PRESCRIPTIONS:
         return "Prescription Logs";
+      case ROUTES.PATIENTS:
+        return "Patient Management";
+      case ROUTES.APPOINTMENTS:
+        return "Appointments & Scheduling";
+      case ROUTES.CALENDAR:
+        return "Clinical Calendar";
       default:
+        if (currentPath.startsWith("/patients/")) return "Patient Profile";
+        if (currentPath.startsWith("/appointments/")) return "Appointment Details";
         return "Healthcare Workspace";
     }
   };
@@ -159,6 +167,39 @@ const WorkspaceLayout = () => {
               <Icon name="dashboard" style={{ fontSize: '16px' }} />
               <span>Dashboard</span>
             </SidebarMenuItem>
+
+            {/* Patients link - Admin, Provider, Nurse */}
+            {(user?.role === ROLES.ADMIN || user?.role === ROLES.PROVIDER || user?.role === ROLES.NURSE) && (
+              <SidebarMenuItem 
+                $active={currentPath === ROUTES.PATIENTS || currentPath.startsWith("/patients")}
+                onClick={() => navigate(ROUTES.PATIENTS)}
+              >
+                <Icon name="users" style={{ fontSize: '16px' }} />
+                <span>Patients</span>
+              </SidebarMenuItem>
+            )}
+
+            {/* Appointments link - Admin, Provider, Nurse, Receptionist, Patient */}
+            {(user?.role === ROLES.ADMIN || user?.role === ROLES.PROVIDER || user?.role === ROLES.NURSE || user?.role === ROLES.RECEPTIONIST || user?.role === ROLES.PATIENT) && (
+              <SidebarMenuItem 
+                $active={currentPath === ROUTES.APPOINTMENTS || currentPath.startsWith("/appointments")}
+                onClick={() => navigate(ROUTES.APPOINTMENTS)}
+              >
+                <Icon name="calendar alternate outline" style={{ fontSize: '16px' }} />
+                <span>Appointments</span>
+              </SidebarMenuItem>
+            )}
+
+            {/* Calendar link - Admin, Provider, Nurse, Receptionist */}
+            {(user?.role === ROLES.ADMIN || user?.role === ROLES.PROVIDER || user?.role === ROLES.NURSE || user?.role === ROLES.RECEPTIONIST) && (
+              <SidebarMenuItem 
+                $active={currentPath === ROUTES.CALENDAR}
+                onClick={() => navigate(ROUTES.CALENDAR)}
+              >
+                <Icon name="calendar" style={{ fontSize: '16px' }} />
+                <span>Calendar</span>
+              </SidebarMenuItem>
+            )}
 
             {/* Admin view for staff management */}
             {user?.role === ROLES.ADMIN && (
