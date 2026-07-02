@@ -173,8 +173,8 @@ export default function AppointmentDetails() {
                   </Value>
                 </div>
                 <div>
-                  <Label>Patient Identifier</Label>
-                  <Value>{patient?.patient_code || "N/A"}</Value>
+                  <Label>Patient ID</Label>
+                  <Value>{patient ? `#${patient.id}` : "N/A"}</Value>
                 </div>
                 <div>
                   <Label>Contact Phone</Label>

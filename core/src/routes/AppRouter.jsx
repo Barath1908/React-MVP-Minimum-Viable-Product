@@ -123,9 +123,6 @@ const AppRouter = () => {
                     ROLES.ADMIN,
                     ROLES.PROVIDER,
                     ROLES.NURSE,
-                    ROLES.PHARMACIST,
-                    ROLES.PATIENT,
-                    ROLES.RECEPTIONIST,
                   ]}
                 >
                   <DashboardPage />
@@ -226,7 +223,7 @@ const AppRouter = () => {
             <Route
               path={ROUTES.APPOINTMENTS}
               element={
-                <RoleBasedRoute allowedRoles={[ROLES.PROVIDER, ROLES.NURSE, ROLES.RECEPTIONIST, ROLES.PATIENT]}>
+                <RoleBasedRoute allowedRoles={[ROLES.ADMIN, ROLES.PROVIDER, ROLES.NURSE, ROLES.RECEPTIONIST, ROLES.PATIENT]}>
                   <AppointmentList />
                 </RoleBasedRoute>
               }
@@ -234,7 +231,7 @@ const AppRouter = () => {
             <Route
               path={ROUTES.APPOINTMENT_CREATE}
               element={
-                <RoleBasedRoute allowedRoles={[ROLES.PROVIDER, ROLES.NURSE, ROLES.RECEPTIONIST, ROLES.PATIENT]}>
+                <RoleBasedRoute allowedRoles={[ROLES.ADMIN, ROLES.PROVIDER, ROLES.NURSE, ROLES.RECEPTIONIST, ROLES.PATIENT]}>
                   <AppointmentForm />
                 </RoleBasedRoute>
               }
@@ -242,7 +239,7 @@ const AppRouter = () => {
             <Route
               path={ROUTES.APPOINTMENT_DETAIL}
               element={
-                <RoleBasedRoute allowedRoles={[ROLES.PROVIDER, ROLES.NURSE, ROLES.RECEPTIONIST, ROLES.PATIENT]}>
+                <RoleBasedRoute allowedRoles={[ROLES.ADMIN, ROLES.PROVIDER, ROLES.NURSE, ROLES.RECEPTIONIST, ROLES.PATIENT]}>
                   <AppointmentDetails />
                 </RoleBasedRoute>
               }
@@ -250,7 +247,7 @@ const AppRouter = () => {
             <Route
               path={ROUTES.APPOINTMENT_EDIT}
               element={
-                <RoleBasedRoute allowedRoles={[ROLES.PROVIDER, ROLES.NURSE, ROLES.RECEPTIONIST]}>
+                <RoleBasedRoute allowedRoles={[ROLES.ADMIN, ROLES.PROVIDER, ROLES.NURSE, ROLES.RECEPTIONIST]}>
                   <AppointmentForm isEdit={true} />
                 </RoleBasedRoute>
               }

@@ -42,8 +42,10 @@ const LoginPage = () => {
 
   useEffect(() => {
     if (isAuthenticated) {
-      if (role === ROLES.RECEPTIONIST) {
-        navigate(ROUTES.CALENDAR, { replace: true });
+      if (role === ROLES.PHARMACIST) {
+        navigate(ROUTES.PRESCRIPTIONS, { replace: true });
+      } else if (role === ROLES.RECEPTIONIST || role === ROLES.PATIENT) {
+        navigate(ROUTES.APPOINTMENTS, { replace: true });
       } else {
         navigate(ROUTES.DASHBOARD, { replace: true });
       }

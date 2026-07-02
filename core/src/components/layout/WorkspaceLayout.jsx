@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useSelector } from "react-redux";
 import { Form, message as antMsg } from "antd";
 import { MenuItem, InputAdornment, IconButton, Box } from "@mui/material";
@@ -142,8 +142,6 @@ const WorkspaceLayout = () => {
         return "Patient Management";
       case ROUTES.APPOINTMENTS:
         return "Appointments & Scheduling";
-      case ROUTES.CALENDAR:
-        return "Clinical Calendar";
       default:
         if (currentPath.startsWith("/patients/")) return "Patient Profile";
         if (currentPath.startsWith("/appointments/")) return "Appointment Details";
@@ -160,13 +158,15 @@ const WorkspaceLayout = () => {
             <span>{tenantConfig?.company_name || 'Apollo Clinic'}</span>
           </LogoArea>
           <SidebarMenu>
-            <SidebarMenuItem 
-              $active={currentPath === ROUTES.DASHBOARD}
-              onClick={() => navigate(ROUTES.DASHBOARD)}
-            >
-              <Icon name="dashboard" style={{ fontSize: '16px' }} />
-              <span>Dashboard</span>
-            </SidebarMenuItem>
+            {user?.role !== ROLES.PHARMACIST && user?.role !== ROLES.RECEPTIONIST && user?.role !== ROLES.PATIENT && (
+              <SidebarMenuItem 
+                $active={currentPath === ROUTES.DASHBOARD}
+                onClick={() => navigate(ROUTES.DASHBOARD)}
+              >
+                <Icon name="dashboard" style={{ fontSize: '16px' }} />
+                <span>Dashboard</span>
+              </SidebarMenuItem>
+            )}
 
             {/* Patients link - Admin, Provider, Nurse */}
             {(user?.role === ROLES.ADMIN || user?.role === ROLES.PROVIDER || user?.role === ROLES.NURSE) && (
@@ -190,16 +190,7 @@ const WorkspaceLayout = () => {
               </SidebarMenuItem>
             )}
 
-            {/* Calendar link - Admin, Provider, Nurse, Receptionist */}
-            {(user?.role === ROLES.ADMIN || user?.role === ROLES.PROVIDER || user?.role === ROLES.NURSE || user?.role === ROLES.RECEPTIONIST) && (
-              <SidebarMenuItem 
-                $active={currentPath === ROUTES.CALENDAR}
-                onClick={() => navigate(ROUTES.CALENDAR)}
-              >
-                <Icon name="calendar" style={{ fontSize: '16px' }} />
-                <span>Calendar</span>
-              </SidebarMenuItem>
-            )}
+
 
             {/* Admin view for staff management */}
             {user?.role === ROLES.ADMIN && (
@@ -378,7 +369,6 @@ const WorkspaceLayout = () => {
             <StyledTextField
               select
               label="Role"
-              defaultValue=""
               slotProps={{
                 select: {
                   MenuProps: {

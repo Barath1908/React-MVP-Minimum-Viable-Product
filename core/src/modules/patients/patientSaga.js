@@ -98,7 +98,6 @@ function* handleCreatePatient(action) {
       const patientRecord = { 
         ...payloadData, 
         id: tempId,
-        patient_code: "PAT-TEMP", 
         created_at: new Date().toISOString() 
       };
       
@@ -146,7 +145,6 @@ function* handleCreatePatient(action) {
       const patientRecord = { 
         ...payloadData, 
         id: tempId,
-        patient_code: "PAT-TEMP", 
         created_at: new Date().toISOString() 
       };
       yield call([offlineDB, "put"], "patients", patientRecord);

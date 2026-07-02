@@ -17,7 +17,7 @@ export const selectFilteredPatients = createSelector(
     return patients.filter((patient) => {
       if (!patient) return false;
       
-      const code = String(patient.patient_code || "").toLowerCase();
+      const id = String(patient.id || "").toLowerCase();
       const first = String(patient.first_name || "").toLowerCase();
       const last = String(patient.last_name || "").toLowerCase();
       const email = String(patient.email || "").toLowerCase();
@@ -25,7 +25,8 @@ export const selectFilteredPatients = createSelector(
       const fullName = `${first} ${last}`.trim();
 
       return (
-        code.includes(term) ||
+        id.includes(term) ||
+        `#${id}`.includes(term) ||
         first.includes(term) ||
         last.includes(term) ||
         fullName.includes(term) ||

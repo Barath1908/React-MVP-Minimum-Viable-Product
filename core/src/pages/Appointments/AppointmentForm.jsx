@@ -6,6 +6,8 @@ import { MenuItem, Box } from "@mui/material";
 import useAppointments from "../../modules/appointments/hooks/useAppointments";
 import usePatients from "../../modules/patients/hooks/usePatients";
 import axiosClient from "../../services/axiosClient";
+import useAuth from "../../modules/auth/hooks/useAuth";
+import { ROLES } from "../../utils/constants";
 import dayjs from "dayjs";
 import {
   StyledButton,
@@ -49,6 +51,8 @@ export default function AppointmentForm({ isEdit = false }) {
   } = useAppointments();
 
   const { patients, fetchPatients } = usePatients();
+  const { user } = useAuth();
+  const currentPatientRecord = patients.find((p) => String(p.user_id) === String(user?.id));
   const [doctors, setDoctors] = useState([]);
   const [conflictError, setConflictError] = useState("");
 
@@ -60,7 +64,8 @@ export default function AppointmentForm({ isEdit = false }) {
       try {
         const res = await axiosClient.get("/auth/staff");
         const list = res.data?.payload?.data || [];
-        setDoctors(list);
+        const filtered = list.filter((d) => d.role === "provider");
+        setDoctors(filtered);
       } catch (err) {
         console.error(err);
       }
@@ -88,6 +93,14 @@ export default function AppointmentForm({ isEdit = false }) {
       });
     }
   }, [isEdit, currentAppointment, id, form]);
+
+  useEffect(() => {
+    if (!isEdit && user?.role === ROLES.PATIENT && currentPatientRecord) {
+      form.setFieldsValue({
+        patient_id: currentPatientRecord.id
+      });
+    }
+  }, [isEdit, user, currentPatientRecord, form]);
 
   const onFinish = async (values) => {
     setConflictError("");
@@ -181,10 +194,13 @@ export default function AppointmentForm({ isEdit = false }) {
                 layout="vertical"
                 onFinish={onFinish}
                 initialValues={{
+                  patient_id: "",
+                  provider_id: "",
                   priority: "Medium",
                   status: "Scheduled",
                   department: "General Medicine",
                   duration_minutes: 30,
+                  reason: "",
                 }}
               >
                 {(conflictError || apiError) && (
@@ -194,39 +210,52 @@ export default function AppointmentForm({ isEdit = false }) {
                 )}
 
                 <SectionHeader>Encounter Information</SectionHeader>
-                <Grid columns={2} stackable>
-                  <Grid.Row>
-                    <Grid.Column>
-                      <Form.Item
-                        name="patient_id"
-                        rules={[{ required: true, message: "Please select a patient" }]}
-                      >
-                        <StyledTextField select label="Patient" defaultValue="">
-                          <MenuItem value="">Select Patient</MenuItem>
-                          {patients.map((p) => (
-                            <MenuItem key={p.id} value={p.id}>
-                              {p.first_name} {p.last_name} ({p.patient_code})
-                            </MenuItem>
-                          ))}
-                        </StyledTextField>
-                      </Form.Item>
-                    </Grid.Column>
-                    <Grid.Column>
-                      <Form.Item
-                        name="provider_id"
-                        rules={[{ required: true, message: "Please select a provider" }]}
-                      >
-                        <StyledTextField select label="Doctor" defaultValue="">
-                          <MenuItem value="">Select Doctor</MenuItem>
-                          {doctors.map((d) => (
-                            <MenuItem key={d.id} value={d.id}>
-                              Dr. {d.first_name} {d.last_name} ({d.role_name || "Provider"})
-                            </MenuItem>
-                          ))}
-                        </StyledTextField>
-                      </Form.Item>
-                    </Grid.Column>
-                  </Grid.Row>
+                 <Grid columns={2} stackable>
+                   <Grid.Row>
+                      <Grid.Column>
+                        {user?.role === ROLES.PATIENT ? (
+                          <>
+                            <Form.Item name="patient_id" noStyle>
+                              <input type="hidden" />
+                            </Form.Item>
+                            <StyledTextField 
+                              label="Patient" 
+                              disabled 
+                              value={currentPatientRecord ? `${currentPatientRecord.first_name} ${currentPatientRecord.last_name}` : "Loading..."} 
+                            />
+                          </>
+                        ) : (
+                          <Form.Item
+                            name="patient_id"
+                            rules={[{ required: true, message: "Please select a patient" }]}
+                          >
+                            <StyledTextField select label="Patient">
+                              <MenuItem value="">Select Patient</MenuItem>
+                              {patients.map((p) => (
+                                <MenuItem key={p.id} value={p.id}>
+                                  {p.first_name} {p.last_name} (ID: #{p.id})
+                                </MenuItem>
+                              ))}
+                            </StyledTextField>
+                          </Form.Item>
+                        )}
+                      </Grid.Column>
+                     <Grid.Column>
+                       <Form.Item
+                         name="provider_id"
+                         rules={[{ required: true, message: "Please select a provider" }]}
+                       >
+                         <StyledTextField select label="Doctor">
+                           <MenuItem value="">Select Doctor</MenuItem>
+                            {doctors.map((d) => (
+                              <MenuItem key={d.id} value={d.id}>
+                                Dr. {d.first_name} {d.last_name} ({d.specialization || "General Medicine"})
+                              </MenuItem>
+                            ))}
+                         </StyledTextField>
+                       </Form.Item>
+                     </Grid.Column>
+                   </Grid.Row>
 
                   <Grid.Row style={{ paddingTop: 0 }}>
                     <Grid.Column>

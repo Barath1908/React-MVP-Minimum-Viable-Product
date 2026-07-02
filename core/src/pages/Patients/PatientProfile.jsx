@@ -102,7 +102,7 @@ export default function PatientProfile() {
                     {patientName}
                   </Header>
                   <span style={{ color: "#9094a6", fontSize: "13px" }}>
-                    Patient ID: <strong style={{ color: "#4f8ef7" }}>{currentPatient.patient_code}</strong>
+                    Patient ID: <strong style={{ color: "#4f8ef7" }}>#{currentPatient.id}</strong>
                   </span>
                 </div>
               </div>
@@ -182,16 +182,12 @@ export default function PatientProfile() {
                 </InfoGrid>
 
                 <Header as="h3" style={{ color: "#e8eaf6", borderBottom: "1px solid #2a2d3e", paddingBottom: "10px", marginTop: "32px" }}>
-                  <Icon name="shield" /> Emergency & Insurance Coverage
+                  <Icon name="shield" /> Emergency Contact
                 </Header>
                 <InfoGrid>
                   <div>
                     <Label>Emergency Contact</Label>
                     <Value>{currentPatient.emergency_contact || "N/A"}</Value>
-                  </div>
-                  <div>
-                    <Label>Insurance Details</Label>
-                    <Value>{currentPatient.insurance_details || currentPatient.insurance || "N/A"}</Value>
                   </div>
                 </InfoGrid>
               </StyledCard>
