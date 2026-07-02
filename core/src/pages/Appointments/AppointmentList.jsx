@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Table, Space, Tag, Modal, message, Select } from "antd";
+import { Table, Tag, Modal, message, Select } from "antd";
 import { Grid, Header, Icon } from "semantic-ui-react";
 import useAppointments from "../../modules/appointments/hooks/useAppointments";
 import usePatients from "../../modules/patients/hooks/usePatients";
@@ -90,9 +90,19 @@ export default function AppointmentList() {
 
   const handleConfirmCancel = () => {
     if (selectedApptId) {
+      const appt = appointments.find((a) => a.id === selectedApptId);
+      const payload = {
+        patient_id: appt?.patient_id,
+        provider_id: appt?.provider_id,
+        scheduled_at: appt?.scheduled_at,
+        duration_minutes: appt?.duration_minutes || 30,
+        reason: appt?.reason || "",
+        notes: appt?.notes || "",
+        status: "Cancelled"
+      };
       updateAppointment(
         selectedApptId,
-        { status: "Cancelled" },
+        payload,
         () => {
           message.success("Appointment cancelled successfully!");
           fetchAppointments();
@@ -155,9 +165,14 @@ export default function AppointmentList() {
       // Match Patient
       const patient = patients.find((p) => p.id === appt.patient_id);
       const patName = patient ? `${patient.first_name} ${patient.last_name}`.toLowerCase() : "";
-      const patCode = patient ? String(patient.patient_code).toLowerCase() : "";
+      const patId = patient ? String(patient.id).toLowerCase() : "";
 
-      return docName.includes(term) || patName.includes(term) || patCode.includes(term);
+      return (
+        docName.includes(term) ||
+        patName.includes(term) ||
+        patId.includes(term) ||
+        `#${patId}`.includes(term)
+      );
     }
 
     return true;
@@ -228,7 +243,7 @@ export default function AppointmentList() {
                 size="small"
                 onClick={() => navigate(`/appointments/edit/${record.id}`)}
               >
-                Reschedule
+                Edit
               </StyledButton>
               <StyledButton
                 variant="outlined"
@@ -289,7 +304,7 @@ export default function AppointmentList() {
                     value={statusFilter}
                     onChange={setStatusFilter}
                     style={{ width: 160, height: 40 }}
-                    dropdownStyle={{ background: "#141622", color: "#ffffff" }}
+                    styles={{ popup: { root: { background: "#141622", color: "#ffffff" } } }}
                   >
                     <Select.Option value="all">All Statuses</Select.Option>
                     <Select.Option value="scheduled">Scheduled</Select.Option>

@@ -85,9 +85,9 @@ export default function PatientList() {
   const columns = [
     {
       title: "Patient ID",
-      dataIndex: "patient_code",
-      key: "patient_code",
-      render: (text) => <strong style={{ color: "#4f8ef7" }}>{text || "N/A"}</strong>,
+      dataIndex: "id",
+      key: "id",
+      render: (id) => <strong style={{ color: "#4f8ef7" }}>#{id}</strong>,
     },
     {
       title: "Patient Name",

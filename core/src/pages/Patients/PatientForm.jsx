@@ -67,7 +67,6 @@ export default function PatientForm({ isEdit = false }) {
         emergency_contact: currentPatient.emergency_contact || "",
         allergies: currentPatient.allergies || "",
         medical_history: currentPatient.medical_history || "",
-        insurance: currentPatient.insurance_details || currentPatient.insurance || "",
       });
     }
   }, [isEdit, currentPatient, id, form]);
@@ -131,8 +130,18 @@ export default function PatientForm({ isEdit = false }) {
                 layout="vertical"
                 onFinish={onFinish}
                 initialValues={{
+                  first_name: "",
+                  last_name: "",
                   gender: "",
+                  date_of_birth: "",
+                  age: "",
                   blood_group: "",
+                  email: "",
+                  phone: "",
+                  address: "",
+                  emergency_contact: "",
+                  allergies: "",
+                  medical_history: "",
                 }}
               >
                 {error && (
@@ -162,7 +171,7 @@ export default function PatientForm({ isEdit = false }) {
                     </Grid.Column>
                     <Grid.Column>
                       <Form.Item name="gender">
-                        <StyledTextField select label="Gender" defaultValue="">
+                        <StyledTextField select label="Gender">
                           <MenuItem value="">Select Gender</MenuItem>
                           <MenuItem value="male">Male</MenuItem>
                           <MenuItem value="female">Female</MenuItem>
@@ -189,7 +198,7 @@ export default function PatientForm({ isEdit = false }) {
                     </Grid.Column>
                     <Grid.Column>
                       <Form.Item name="blood_group">
-                        <StyledTextField select label="Blood Group" defaultValue="">
+                        <StyledTextField select label="Blood Group">
                           <MenuItem value="">Select Blood Group</MenuItem>
                           <MenuItem value="A+">A+</MenuItem>
                           <MenuItem value="A-">A-</MenuItem>
@@ -247,7 +256,7 @@ export default function PatientForm({ isEdit = false }) {
                   </Grid.Row>
                 </Grid>
 
-                <SectionHeader>Medical & Insurance Information</SectionHeader>
+                <SectionHeader>Medical & Emergency Contact Information</SectionHeader>
                 <Grid columns={2} stackable>
                   <Grid.Row>
                     <Grid.Column>
@@ -255,14 +264,6 @@ export default function PatientForm({ isEdit = false }) {
                         <StyledTextField
                           label="Emergency Contact Name/Phone"
                           placeholder="e.g. Spouse: +91 98765 01234"
-                        />
-                      </Form.Item>
-                    </Grid.Column>
-                    <Grid.Column>
-                      <Form.Item name="insurance">
-                        <StyledTextField
-                          label="Insurance Policy Details"
-                          placeholder="e.g. Star Health Policy #99283"
                         />
                       </Form.Item>
                     </Grid.Column>

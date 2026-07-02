@@ -39,7 +39,6 @@ export const ROUTES = {
   APPOINTMENT_CREATE: "/appointments/new",
   APPOINTMENT_DETAIL: "/appointments/:id",
   APPOINTMENT_EDIT:   "/appointments/edit/:id",
-  CALENDAR:         "/calendar",
   STAFF:            "/staff",
   STAFF_ADD:        "/staff/add",
   USERS:            "/users",
