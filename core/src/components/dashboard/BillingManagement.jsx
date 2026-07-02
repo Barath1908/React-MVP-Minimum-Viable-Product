@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { Form, Table, Tag, message as antMsg, DatePicker } from "antd";
 import { MenuItem, Box, Typography, CardContent, Grid as MuiGrid } from "@mui/material";
-import { Icon } from "semantic-ui-react";
 import styled from "styled-components";
 import useBilling from "../../modules/billing/hooks/useBilling";
 import useAuth from "../../modules/auth/hooks/useAuth";
@@ -324,7 +323,7 @@ const BillingManagement = () => {
       {(user?.role === ROLES.ADMIN || user?.role === ROLES.PROVIDER) && summary && (
         <MetricsContainer>
           <MuiGrid container spacing={3}>
-            <MuiGrid item xs={12} sm={3}>
+            <MuiGrid xs={12} sm={3}>
               <MetricCard>
                 <CardContent>
                   <Typography variant="subtitle2" sx={{ color: "#9094a6" }}>
@@ -334,7 +333,7 @@ const BillingManagement = () => {
                 </CardContent>
               </MetricCard>
             </MuiGrid>
-            <MuiGrid item xs={12} sm={3}>
+            <MuiGrid xs={12} sm={3}>
               <MetricCard>
                 <CardContent>
                   <Typography variant="subtitle2" sx={{ color: "#48bb78" }}>
@@ -346,7 +345,7 @@ const BillingManagement = () => {
                 </CardContent>
               </MetricCard>
             </MuiGrid>
-            <MuiGrid item xs={12} sm={3}>
+            <MuiGrid xs={12} sm={3}>
               <MetricCard>
                 <CardContent>
                   <Typography variant="subtitle2" sx={{ color: "#3182ce" }}>
@@ -358,7 +357,7 @@ const BillingManagement = () => {
                 </CardContent>
               </MetricCard>
             </MuiGrid>
-            <MuiGrid item xs={12} sm={3}>
+            <MuiGrid xs={12} sm={3}>
               <MetricCard>
                 <CardContent>
                   <Typography variant="subtitle2" sx={{ color: "#e53e3e" }}>

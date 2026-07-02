@@ -12,7 +12,7 @@ const CustomizedModal = styled(AntdModal)`
   }
 `;
 
-export const StyledModal = ({ children, title, ...props }) => {
+export const StyledModal = ({ children, title, centered = true, ...props }) => {
   const theme = useContext(ThemeContext) || {};
   const colors = theme.colors || {};
 
@@ -42,6 +42,7 @@ export const StyledModal = ({ children, title, ...props }) => {
   return (
     <CustomizedModal
       title={title}
+      centered={centered}
       closeIcon={<Icon name="close" style={{ color: theme.textSecondary || '#9094a6', fontSize: '14px' }} />}
       styles={modalStyles}
       {...props}
