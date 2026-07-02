@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Form, Table, Tag, message as antMsg } from "antd";
-import { MenuItem, Box, Typography, CardContent, Grid as MuiGrid } from "@mui/material";
-import { Icon } from "semantic-ui-react";
+import { MenuItem, Typography, CardContent, Grid as MuiGrid } from "@mui/material";
+
 import styled from "styled-components";
 import usePrescriptions from "../../modules/prescriptions/hooks/usePrescriptions";
 import useAuth from "../../modules/auth/hooks/useAuth";
@@ -297,7 +297,7 @@ const PrescriptionsPage = () => {
       {/* Metrics Row */}
       <MetricsContainer>
         <MuiGrid container spacing={3}>
-          <MuiGrid item xs={12} sm={3}>
+          <MuiGrid xs={12} sm={3}>
             <MetricCard>
               <CardContent>
                 <Typography variant="subtitle2" sx={{ color: "#9094a6" }}>
@@ -307,7 +307,7 @@ const PrescriptionsPage = () => {
               </CardContent>
             </MetricCard>
           </MuiGrid>
-          <MuiGrid item xs={12} sm={3}>
+          <MuiGrid xs={12} sm={3}>
             <MetricCard>
               <CardContent>
                 <Typography variant="subtitle2" sx={{ color: "#gold" }}>
@@ -317,7 +317,7 @@ const PrescriptionsPage = () => {
               </CardContent>
             </MetricCard>
           </MuiGrid>
-          <MuiGrid item xs={12} sm={3}>
+          <MuiGrid xs={12} sm={3}>
             <MetricCard>
               <CardContent>
                 <Typography variant="subtitle2" sx={{ color: "#3182ce" }}>
@@ -327,7 +327,7 @@ const PrescriptionsPage = () => {
               </CardContent>
             </MetricCard>
           </MuiGrid>
-          <MuiGrid item xs={12} sm={3}>
+          <MuiGrid xs={12} sm={3}>
             <MetricCard>
               <CardContent>
                 <Typography variant="subtitle2" sx={{ color: "#48bb78" }}>

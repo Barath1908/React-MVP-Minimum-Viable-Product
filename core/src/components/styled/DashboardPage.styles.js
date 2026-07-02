@@ -27,6 +27,13 @@ export const LogoArea = styled.div`
   font-size: 20px;
   font-weight: 700;
   color: ${(props) => props.theme.colors?.textPrimary || "#ffffff"};
+
+  & > i.icon {
+    margin: 0 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
 `;
 
 export const SidebarMenu = styled.div`
@@ -55,6 +62,13 @@ export const SidebarMenuItem = styled.div`
     ? `3px solid ${props.theme.colors?.primary || '#7c5cbf'}` 
     : '3px solid transparent'};
 
+  & > i.icon {
+    margin: 0 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
   &:hover {
     color: ${(props) => props.theme.colors?.primary || "#7c5cbf"};
     background-color: rgba(124, 92, 191, 0.04);
@@ -77,6 +91,13 @@ export const LogoutLink = styled.div`
   color: #e53e3e;
   font-weight: 500;
   transition: all 0.2s;
+
+  & > i.icon {
+    margin: 0 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
 
   &:hover {
     background-color: rgba(229, 62, 62, 0.08);
@@ -116,6 +137,13 @@ export const UserSection = styled.div`
   margin-left: 20px;
   padding-left: 20px;
   border-left: 1px solid ${(props) => props.theme.colors?.border || "#1e2130"};
+
+  & > i.icon {
+    margin: 0 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
 `;
 
 export const ContentArea = styled.div`
