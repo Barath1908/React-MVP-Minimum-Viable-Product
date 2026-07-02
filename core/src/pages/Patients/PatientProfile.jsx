@@ -12,8 +12,21 @@ import styled from "styled-components";
 
 const ProfileContainer = styled.div`
   padding: 16px;
-  background: ${({ theme }) => theme.colors?.background || "#0f1117"};
+  background: ${({ theme }) => theme.colors.background};
   min-height: 100%;
+`;
+
+const LoadingContainer = styled(ProfileContainer)`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 400px;
+`;
+
+const LoadingSpinner = styled(Icon)`
+  && {
+    color: ${({ theme }) => theme.colors.primary} !important;
+  }
 `;
 
 const ProfileHeader = styled.div`
@@ -21,6 +34,28 @@ const ProfileHeader = styled.div`
   justify-content: space-between;
   align-items: center;
   margin-bottom: 20px;
+`;
+
+const HeaderInfoContainer = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+const PageTitle = styled(Header)`
+  && {
+    color: ${({ theme }) => theme.colors.textPrimary} !important;
+    font-weight: 700 !important;
+    margin: 0 !important;
+  }
+`;
+
+const PatientSub = styled.span`
+  color: ${({ theme }) => theme.colors.textSecondary};
+  font-size: 13px;
+`;
+
+const PatientIdHighlight = styled.strong`
+  color: ${({ theme }) => theme.colors.primary};
 `;
 
 const InfoGrid = styled.div`
@@ -34,7 +69,7 @@ const Label = styled.div`
   font-size: 11px;
   font-weight: 600;
   text-transform: uppercase;
-  color: ${({ theme }) => theme.colors?.textSecondary || "#9094a6"};
+  color: ${({ theme }) => theme.colors.textSecondary};
   margin-bottom: 4px;
   letter-spacing: 0.05em;
 `;
@@ -42,7 +77,51 @@ const Label = styled.div`
 const Value = styled.div`
   font-size: 15px;
   font-weight: 500;
-  color: ${({ theme }) => theme.colors?.textPrimary || "#ffffff"};
+  color: ${({ theme }) => theme.colors.textPrimary};
+`;
+
+const DangerValue = styled(Value)`
+  && {
+    color: ${({ theme }) => theme.colors.danger} !important;
+    font-weight: 700 !important;
+  }
+`;
+
+const GridSpanTwo = styled.div`
+  grid-column: span 2;
+`;
+
+const StyledMenu = styled(Menu)`
+  &&& {
+    border-color: ${({ theme }) => theme.colors.border} !important;
+    margin-bottom: 20px !important;
+    background: transparent !important;
+    
+    .item {
+      color: ${({ theme }) => theme.colors.textSecondary} !important;
+      border-color: transparent !important;
+      font-weight: 500;
+      
+      &:hover {
+        color: ${({ theme }) => theme.colors.primaryHover} !important;
+      }
+      
+      &.active {
+        color: ${({ theme }) => theme.colors.primary} !important;
+        border-color: ${({ theme }) => theme.colors.primary} !important;
+      }
+    }
+  }
+`;
+
+const CardSectionHeader = styled(Header)`
+  && {
+    color: ${({ theme }) => theme.colors.primary} !important;
+    border-bottom: 1px solid ${({ theme }) => theme.colors.border} !important;
+    padding-bottom: 10px !important;
+    margin-top: ${({ mt }) => mt || "0"} !important;
+    font-weight: 600 !important;
+  }
 `;
 
 export default function PatientProfile() {
@@ -59,9 +138,9 @@ export default function PatientProfile() {
 
   if (loading) {
     return (
-      <ProfileContainer style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "400px" }}>
-        <Icon name="spinner" loading size="huge" style={{ color: "#4f8ef7" }} />
-      </ProfileContainer>
+      <LoadingContainer>
+        <LoadingSpinner name="spinner" loading size="huge" />
+      </LoadingContainer>
     );
   }
 
@@ -89,7 +168,7 @@ export default function PatientProfile() {
         <Grid.Row>
           <Grid.Column width={16}>
             <ProfileHeader>
-              <div style={{ display: "flex", alignItems: "center" }}>
+              <HeaderInfoContainer>
                 <StyledButton
                   variant="outlined"
                   onClick={() => navigate("/patients")}
@@ -98,14 +177,14 @@ export default function PatientProfile() {
                   <Icon name="arrow left" style={{ margin: 0 }} />
                 </StyledButton>
                 <div>
-                  <Header as="h2" style={{ color: "#e8eaf6", margin: 0 }}>
+                  <PageTitle as="h2">
                     {patientName}
-                  </Header>
-                  <span style={{ color: "#9094a6", fontSize: "13px" }}>
-                    Patient ID: <strong style={{ color: "#4f8ef7" }}>#{currentPatient.id}</strong>
-                  </span>
+                  </PageTitle>
+                  <PatientSub>
+                    Patient ID: <PatientIdHighlight>#{currentPatient.id}</PatientIdHighlight>
+                  </PatientSub>
                 </div>
-              </div>
+              </HeaderInfoContainer>
               <StyledButton
                 variant="contained"
                 onClick={() => navigate(`/patients/edit/${currentPatient.id}`)}
@@ -118,26 +197,24 @@ export default function PatientProfile() {
 
         <Grid.Row>
           <Grid.Column width={16}>
-            <Menu pointing secondary inverted style={{ borderColor: "#2a2d3e", marginBottom: "20px" }}>
+            <StyledMenu pointing secondary>
               <Menu.Item
                 name="General Profile"
                 active={activeTab === "general"}
                 onClick={() => setActiveTab("general")}
-                style={{ color: activeTab === "general" ? "#4f8ef7" : "#9094a6" }}
               />
               <Menu.Item
                 name="Clinical Medical History"
                 active={activeTab === "history"}
                 onClick={() => setActiveTab("history")}
-                style={{ color: activeTab === "history" ? "#4f8ef7" : "#9094a6" }}
               />
-            </Menu>
+            </StyledMenu>
 
             {activeTab === "general" ? (
               <StyledCard>
-                <Header as="h3" style={{ color: "#e8eaf6", borderBottom: "1px solid #2a2d3e", paddingBottom: "10px" }}>
+                <CardSectionHeader as="h3">
                   <Icon name="address card" /> Personal & Medical Details
-                </Header>
+                </CardSectionHeader>
                 <InfoGrid>
                   <div>
                     <Label>Date of Birth</Label>
@@ -157,15 +234,15 @@ export default function PatientProfile() {
                   </div>
                   <div>
                     <Label>Blood Group</Label>
-                    <Value style={{ color: "#ff5252", fontWeight: 700 }}>
+                    <DangerValue>
                       {currentPatient.blood_group || "N/A"}
-                    </Value>
+                    </DangerValue>
                   </div>
                 </InfoGrid>
 
-                <Header as="h3" style={{ color: "#e8eaf6", borderBottom: "1px solid #2a2d3e", paddingBottom: "10px", marginTop: "32px" }}>
+                <CardSectionHeader as="h3" mt="32px">
                   <Icon name="mail" /> Contact Information
-                </Header>
+                </CardSectionHeader>
                 <InfoGrid>
                   <div>
                     <Label>Email Address</Label>
@@ -175,15 +252,15 @@ export default function PatientProfile() {
                     <Label>Phone Number</Label>
                     <Value>{currentPatient.phone || "N/A"}</Value>
                   </div>
-                  <div style={{ gridColumn: "span 2" }}>
+                  <GridSpanTwo>
                     <Label>Residential Address</Label>
                     <Value>{currentPatient.address || "N/A"}</Value>
-                  </div>
+                  </GridSpanTwo>
                 </InfoGrid>
 
-                <Header as="h3" style={{ color: "#e8eaf6", borderBottom: "1px solid #2a2d3e", paddingBottom: "10px", marginTop: "32px" }}>
+                <CardSectionHeader as="h3" mt="32px">
                   <Icon name="shield" /> Emergency Contact
-                </Header>
+                </CardSectionHeader>
                 <InfoGrid>
                   <div>
                     <Label>Emergency Contact</Label>

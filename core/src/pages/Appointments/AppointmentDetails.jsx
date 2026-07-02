@@ -10,12 +10,24 @@ import {
   StyledAlert,
 } from "../../components/common";
 import styled from "styled-components";
-import { Box } from "@mui/material";
 
 const Container = styled.div`
   padding: 16px;
-  background: ${({ theme }) => theme.colors?.background || "#0f1117"};
+  background: ${({ theme }) => theme.colors.background};
   min-height: 100%;
+`;
+
+const LoadingContainer = styled(Container)`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 400px;
+`;
+
+const LoadingSpinner = styled(Icon)`
+  && {
+    color: ${({ theme }) => theme.colors.primary} !important;
+  }
 `;
 
 const DetailHeader = styled.div`
@@ -23,6 +35,28 @@ const DetailHeader = styled.div`
   justify-content: space-between;
   align-items: center;
   margin-bottom: 20px;
+`;
+
+const HeaderInfoContainer = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+const PageTitle = styled(Header)`
+  && {
+    color: ${({ theme }) => theme.colors.textPrimary} !important;
+    font-weight: 700 !important;
+    margin: 0 !important;
+  }
+`;
+
+const Subtitle = styled.span`
+  color: ${({ theme }) => theme.colors.textSecondary};
+  font-size: 13px;
+`;
+
+const PrimaryHighlight = styled.strong`
+  color: ${({ theme }) => theme.colors.primary};
 `;
 
 const InfoGrid = styled.div`
@@ -36,7 +70,7 @@ const Label = styled.div`
   font-size: 11px;
   font-weight: 600;
   text-transform: uppercase;
-  color: ${({ theme }) => theme.colors?.textSecondary || "#9094a6"};
+  color: ${({ theme }) => theme.colors.textSecondary};
   margin-bottom: 4px;
   letter-spacing: 0.05em;
 `;
@@ -44,7 +78,35 @@ const Label = styled.div`
 const Value = styled.div`
   font-size: 15px;
   font-weight: 500;
-  color: ${({ theme }) => theme.colors?.textPrimary || "#ffffff"};
+  color: ${({ theme }) => theme.colors.textPrimary};
+`;
+
+const StatusValue = styled(Value)`
+  && {
+    color: ${({ status, theme }) => status === "Cancelled" ? theme.colors.danger : theme.colors.success} !important;
+  }
+`;
+
+const CardSectionHeader = styled(Header)`
+  && {
+    color: ${({ theme }) => theme.colors.primary} !important;
+    border-bottom: 1px solid ${({ theme }) => theme.colors.border} !important;
+    padding-bottom: 10px !important;
+    margin-top: ${({ mt }) => mt || "0"} !important;
+    font-weight: 600 !important;
+  }
+`;
+
+const ReasonBox = styled.div`
+  margin-top: 16px;
+  padding: 16px;
+  border-radius: 8px;
+  background: ${({ theme }) => theme.colors.inputBackground};
+  border: 1px solid ${({ theme }) => theme.colors.border};
+`;
+
+const ItalicValue = styled(Value)`
+  font-style: italic;
 `;
 
 export default function AppointmentDetails() {
@@ -75,9 +137,9 @@ export default function AppointmentDetails() {
 
   if (loading) {
     return (
-      <Container style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "400px" }}>
-        <Icon name="spinner" loading size="huge" style={{ color: "#4f8ef7" }} />
-      </Container>
+      <LoadingContainer>
+        <LoadingSpinner name="spinner" loading size="huge" />
+      </LoadingContainer>
     );
   }
 
@@ -106,7 +168,7 @@ export default function AppointmentDetails() {
         <Grid.Row>
           <Grid.Column width={16}>
             <DetailHeader>
-              <div style={{ display: "flex", alignItems: "center" }}>
+              <HeaderInfoContainer>
                 <StyledButton
                   variant="outlined"
                   onClick={() => navigate("/appointments")}
@@ -115,14 +177,14 @@ export default function AppointmentDetails() {
                   <Icon name="arrow left" style={{ margin: 0 }} />
                 </StyledButton>
                 <div>
-                  <Header as="h2" style={{ color: "#e8eaf6", margin: 0 }}>
+                  <PageTitle as="h2">
                     Appointment Details
-                  </Header>
-                  <span style={{ color: "#9094a6", fontSize: "13px" }}>
-                    ID Reference: <strong style={{ color: "#4f8ef7" }}>APT-{String(currentAppointment.id).padStart(4, "0")}</strong>
-                  </span>
+                  </PageTitle>
+                  <Subtitle>
+                    ID Reference: <PrimaryHighlight>APT-{String(currentAppointment.id).padStart(4, "0")}</PrimaryHighlight>
+                  </Subtitle>
                 </div>
-              </div>
+              </HeaderInfoContainer>
               {String(currentAppointment.status).toLowerCase() !== "cancelled" && (
                 <StyledButton
                   variant="contained"
@@ -138,9 +200,9 @@ export default function AppointmentDetails() {
         <Grid.Row>
           <Grid.Column width={16}>
             <StyledCard>
-              <Header as="h3" style={{ color: "#e8eaf6", borderBottom: "1px solid #2a2d3e", paddingBottom: "10px" }}>
+              <CardSectionHeader as="h3">
                 <Icon name="calendar check" /> Appointment Status & Timing
-              </Header>
+              </CardSectionHeader>
               <InfoGrid>
                 <div>
                   <Label>Scheduled Date & Time</Label>
@@ -152,9 +214,9 @@ export default function AppointmentDetails() {
                 </div>
                 <div>
                   <Label>Current Booking Status</Label>
-                  <Value style={{ color: currentAppointment.status === "Cancelled" ? "#ff5252" : "#4caf50" }}>
+                  <StatusValue status={currentAppointment.status}>
                     {currentAppointment.status}
-                  </Value>
+                  </StatusValue>
                 </div>
                 <div>
                   <Label>Encounter Priority</Label>
@@ -162,9 +224,9 @@ export default function AppointmentDetails() {
                 </div>
               </InfoGrid>
 
-              <Header as="h3" style={{ color: "#e8eaf6", borderBottom: "1px solid #2a2d3e", paddingBottom: "10px", marginTop: "32px" }}>
+              <CardSectionHeader as="h3" mt="32px">
                 <Icon name="user" /> Patient Information
-              </Header>
+              </CardSectionHeader>
               <InfoGrid>
                 <div>
                   <Label>Full Name</Label>
@@ -186,9 +248,9 @@ export default function AppointmentDetails() {
                 </div>
               </InfoGrid>
 
-              <Header as="h3" style={{ color: "#e8eaf6", borderBottom: "1px solid #2a2d3e", paddingBottom: "10px", marginTop: "32px" }}>
+              <CardSectionHeader as="h3" mt="32px">
                 <Icon name="doctor" /> Clinician Information
-              </Header>
+              </CardSectionHeader>
               <InfoGrid>
                 <div>
                   <Label>Assigned Doctor</Label>
@@ -202,14 +264,14 @@ export default function AppointmentDetails() {
                 </div>
               </InfoGrid>
 
-              <Header as="h3" style={{ color: "#e8eaf6", borderBottom: "1px solid #2a2d3e", paddingBottom: "10px", marginTop: "32px" }}>
+              <CardSectionHeader as="h3" mt="32px">
                 <Icon name="file alternate" /> Reason for Encounter
-              </Header>
-              <Box sx={{ mt: 2, p: 2, borderRadius: "8px", background: "#1e2230", border: "1px solid #2a2d3e" }}>
-                <Value style={{ fontStyle: "italic" }}>
+              </CardSectionHeader>
+              <ReasonBox>
+                <ItalicValue>
                   {currentAppointment.reason || "No clinical reasons specified."}
-                </Value>
-              </Box>
+                </ItalicValue>
+              </ReasonBox>
             </StyledCard>
           </Grid.Column>
         </Grid.Row>

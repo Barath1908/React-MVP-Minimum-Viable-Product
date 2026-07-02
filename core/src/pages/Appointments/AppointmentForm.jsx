@@ -15,17 +15,17 @@ import {
   StyledCard,
   StyledAlert,
 } from "../../components/common";
-import styled from "styled-components";
+import styled, { createGlobalStyle } from "styled-components";
 
 const FormContainer = styled.div`
   padding: 16px;
-  background: ${({ theme }) => theme.colors?.background || "#0f1117"};
+  background: ${({ theme }) => theme.colors.background};
   min-height: 100%;
 `;
 
 const SectionHeader = styled.h4`
-  color: #4f8ef7;
-  border-bottom: 1px solid ${({ theme }) => theme.colors?.border || "#2a2d3e"};
+  color: ${({ theme }) => theme.colors.primary};
+  border-bottom: 1px solid ${({ theme }) => theme.colors.border};
   padding-bottom: 8px;
   margin-top: 24px;
   margin-bottom: 16px;
@@ -33,6 +33,195 @@ const SectionHeader = styled.h4`
   letter-spacing: 0.05em;
   text-transform: uppercase;
   font-size: 13px;
+`;
+
+const PageHeaderContainer = styled.div`
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+`;
+
+const PageTitle = styled(Header)`
+  && {
+    color: ${({ theme }) => theme.colors.textPrimary} !important;
+    font-weight: 700 !important;
+    margin: 0 !important;
+  }
+`;
+
+const AlertWrapper = styled(StyledAlert)`
+  && {
+    margin-bottom: 20px;
+  }
+`;
+
+const TightGridRow = styled(Grid.Row)`
+  && {
+    padding-top: 0 !important;
+  }
+`;
+
+const StyledDatePicker = styled(DatePicker)`
+  && {
+    background-color: ${({ theme }) => theme.colors.inputBackground} !important;
+    border: 1px solid ${({ theme }) => theme.colors.inputBorder} !important;
+    border-radius: 8px !important;
+    height: 50px !important;
+    width: 100% !important;
+    
+    .ant-picker-input > input {
+      color: ${({ theme }) => theme.colors.textPrimary} !important;
+      font-size: 14px !important;
+      font-weight: 500 !important;
+      
+      &::placeholder {
+        color: ${({ theme }) => theme.colors.textMuted} !important;
+      }
+    }
+    
+    .ant-picker-suffix {
+      color: ${({ theme }) => theme.colors.textSecondary} !important;
+    }
+    
+    &:hover, &.ant-picker-focused {
+      border-color: ${({ theme }) => theme.colors.primary} !important;
+    }
+    
+    &.ant-picker-focused {
+      box-shadow: 0 0 0 2px ${({ theme }) => theme.colors.primary}20 !important;
+    }
+  }
+`;
+
+const StyledTimePicker = styled(TimePicker)`
+  && {
+    background-color: ${({ theme }) => theme.colors.inputBackground} !important;
+    border: 1px solid ${({ theme }) => theme.colors.inputBorder} !important;
+    border-radius: 8px !important;
+    height: 50px !important;
+    width: 100% !important;
+    
+    .ant-picker-input > input {
+      color: ${({ theme }) => theme.colors.textPrimary} !important;
+      font-size: 14px !important;
+      font-weight: 500 !important;
+      
+      &::placeholder {
+        color: ${({ theme }) => theme.colors.textMuted} !important;
+      }
+    }
+    
+    .ant-picker-suffix {
+      color: ${({ theme }) => theme.colors.textSecondary} !important;
+    }
+    
+    &:hover, &.ant-picker-focused {
+      border-color: ${({ theme }) => theme.colors.primary} !important;
+    }
+    
+    &.ant-picker-focused {
+      box-shadow: 0 0 0 2px ${({ theme }) => theme.colors.primary}20 !important;
+    }
+  }
+`;
+
+const GlobalPickerStyle = createGlobalStyle`
+  .ant-picker-dropdown {
+    .ant-picker-panel-container {
+      background-color: ${({ theme }) => theme.colors.backgroundCard} !important;
+      border: 1px solid ${({ theme }) => theme.colors.border} !important;
+      border-radius: 8px !important;
+      box-shadow: ${({ theme }) => theme.shadows?.md || '0 4px 12px rgba(0,0,0,0.15)'} !important;
+    }
+    
+    .ant-picker-panel {
+      background: transparent !important;
+      border: none !important;
+    }
+    
+    .ant-picker-header {
+      color: ${({ theme }) => theme.colors.textPrimary} !important;
+      border-bottom: 1px solid ${({ theme }) => theme.colors.border} !important;
+      
+      button {
+        color: ${({ theme }) => theme.colors.textSecondary} !important;
+        background: transparent !important;
+        
+        &:hover {
+          color: ${({ theme }) => theme.colors.primary} !important;
+        }
+      }
+    }
+    
+    .ant-picker-header-view button {
+      color: ${({ theme }) => theme.colors.textPrimary} !important;
+      font-weight: 600 !important;
+    }
+    
+    .ant-picker-content th {
+      color: ${({ theme }) => theme.colors.textSecondary} !important;
+      background: transparent !important;
+      border: none !important;
+    }
+    
+    .ant-picker-cell {
+      color: ${({ theme }) => theme.colors.textMuted} !important;
+    }
+    
+    .ant-picker-cell-in-view {
+      color: ${({ theme }) => theme.colors.textPrimary} !important;
+    }
+    
+    .ant-picker-cell-inner {
+      color: inherit !important;
+      border-radius: 4px !important;
+      
+      &:hover {
+        background: ${({ theme }) => theme.colors.backgroundHover} !important;
+      }
+    }
+    
+    .ant-picker-cell-selected .ant-picker-cell-inner {
+      background: ${({ theme }) => theme.colors.primary} !important;
+      color: #ffffff !important;
+    }
+    
+    .ant-picker-cell-today .ant-picker-cell-inner::before {
+      border: 1px solid ${({ theme }) => theme.colors.primary} !important;
+      border-radius: 4px !important;
+    }
+    
+    .ant-picker-today-btn {
+      color: ${({ theme }) => theme.colors.primary} !important;
+      font-weight: 600 !important;
+    }
+    
+    .ant-picker-time-panel-column > li.ant-picker-time-panel-cell .ant-picker-time-panel-cell-inner {
+      color: ${({ theme }) => theme.colors.textSecondary} !important;
+      
+      &:hover {
+        background: ${({ theme }) => theme.colors.backgroundHover} !important;
+      }
+    }
+    
+    .ant-picker-time-panel-column > li.ant-picker-time-panel-cell-selected .ant-picker-time-panel-cell-inner {
+      background: ${({ theme }) => theme.colors.primary} !important;
+      color: #ffffff !important;
+    }
+    
+    .ant-picker-ok button {
+      background: ${({ theme }) => theme.colors.primary} !important;
+      color: #ffffff !important;
+      border: none !important;
+      border-radius: 4px !important;
+      padding: 2px 8px !important;
+      font-weight: 500 !important;
+      
+      &:hover {
+        background: ${({ theme }) => theme.colors.primaryHover} !important;
+      }
+    }
+  }
 `;
 
 export default function AppointmentForm({ isEdit = false }) {
@@ -168,10 +357,11 @@ export default function AppointmentForm({ isEdit = false }) {
 
   return (
     <FormContainer>
+      <GlobalPickerStyle />
       <Grid stackable>
         <Grid.Row>
           <Grid.Column width={16}>
-            <div style={{ display: "flex", alignItems: "center", marginBottom: "20px" }}>
+            <PageHeaderContainer>
               <StyledButton
                 variant="outlined"
                 onClick={() => navigate("/appointments")}
@@ -179,10 +369,10 @@ export default function AppointmentForm({ isEdit = false }) {
               >
                 <Icon name="arrow left" style={{ margin: 0 }} />
               </StyledButton>
-              <Header as="h2" style={{ color: "#e8eaf6", margin: 0 }}>
+              <PageTitle as="h2">
                 {isEdit ? "Reschedule Appointment Slot" : "Schedule New Appointment"}
-              </Header>
-            </div>
+              </PageTitle>
+            </PageHeaderContainer>
           </Grid.Column>
         </Grid.Row>
 
@@ -204,9 +394,9 @@ export default function AppointmentForm({ isEdit = false }) {
                 }}
               >
                 {(conflictError || apiError) && (
-                  <StyledAlert severity="error" style={{ marginBottom: "20px" }}>
+                  <AlertWrapper severity="error">
                     {conflictError || apiError}
-                  </StyledAlert>
+                  </AlertWrapper>
                 )}
 
                 <SectionHeader>Encounter Information</SectionHeader>
@@ -257,7 +447,7 @@ export default function AppointmentForm({ isEdit = false }) {
                      </Grid.Column>
                    </Grid.Row>
 
-                  <Grid.Row style={{ paddingTop: 0 }}>
+                  <TightGridRow>
                     <Grid.Column>
                       <Form.Item name="department">
                         <StyledTextField select label="Department">
@@ -280,7 +470,7 @@ export default function AppointmentForm({ isEdit = false }) {
                         </StyledTextField>
                       </Form.Item>
                     </Grid.Column>
-                  </Grid.Row>
+                  </TightGridRow>
                 </Grid>
 
                 <SectionHeader>Schedule Date & Time</SectionHeader>
@@ -291,7 +481,7 @@ export default function AppointmentForm({ isEdit = false }) {
                         name="appointment_date"
                         rules={[{ required: true, message: "Date is required" }]}
                       >
-                        <DatePicker style={{ width: "100%", height: 50, background: "#1e2230", border: "1px solid #2a2d3e", color: "#ffffff" }} />
+                        <StyledDatePicker />
                       </Form.Item>
                     </Grid.Column>
                     <Grid.Column>
@@ -299,7 +489,7 @@ export default function AppointmentForm({ isEdit = false }) {
                         name="appointment_time"
                         rules={[{ required: true, message: "Time slot is required" }]}
                       >
-                        <TimePicker format="HH:mm" style={{ width: "100%", height: 50, background: "#1e2230", border: "1px solid #2a2d3e", color: "#ffffff" }} />
+                        <StyledTimePicker format="HH:mm" />
                       </Form.Item>
                     </Grid.Column>
                   </Grid.Row>
@@ -328,7 +518,7 @@ export default function AppointmentForm({ isEdit = false }) {
                       </Form.Item>
                     </Grid.Column>
                   </Grid.Row>
-                  <Grid.Row style={{ paddingTop: 0 }}>
+                  <TightGridRow>
                     <Grid.Column width={16}>
                       <Form.Item name="reason">
                         <StyledTextField
@@ -339,7 +529,7 @@ export default function AppointmentForm({ isEdit = false }) {
                         />
                       </Form.Item>
                     </Grid.Column>
-                  </Grid.Row>
+                  </TightGridRow>
                 </Grid>
 
                 <Box sx={{ mt: 3, display: "flex", justifyContent: "flex-end", gap: 2 }}>

@@ -10,17 +10,17 @@ import {
   StyledCard,
   StyledAlert,
 } from "../../components/common";
-import styled from "styled-components";
+import styled, { useTheme } from "styled-components";
 
 const FormContainer = styled.div`
   padding: 16px;
-  background: ${({ theme }) => theme.colors?.background || "#0f1117"};
+  background: ${({ theme }) => theme.colors.background};
   min-height: 100%;
 `;
 
 const SectionHeader = styled.h4`
-  color: #4f8ef7;
-  border-bottom: 1px solid ${({ theme }) => theme.colors?.border || "#2a2d3e"};
+  color: ${({ theme }) => theme.colors.primary};
+  border-bottom: 1px solid ${({ theme }) => theme.colors.border};
   padding-bottom: 8px;
   margin-top: 24px;
   margin-bottom: 16px;
@@ -30,10 +30,37 @@ const SectionHeader = styled.h4`
   font-size: 13px;
 `;
 
+const PageHeaderContainer = styled.div`
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+`;
+
+const PageTitle = styled(Header)`
+  && {
+    color: ${({ theme }) => theme.colors.textPrimary} !important;
+    font-weight: 700 !important;
+    margin: 0 !important;
+  }
+`;
+
+const AlertWrapper = styled(StyledAlert)`
+  && {
+    margin-bottom: 20px;
+  }
+`;
+
+const TightGridRow = styled(Grid.Row)`
+  && {
+    padding-top: 0 !important;
+  }
+`;
+
 export default function PatientForm({ isEdit = false }) {
   const navigate = useNavigate();
   const { id } = useParams();
   const [form] = Form.useForm();
+  const theme = useTheme();
   const {
     currentPatient,
     loading,
@@ -107,7 +134,7 @@ export default function PatientForm({ isEdit = false }) {
       <Grid stackable>
         <Grid.Row>
           <Grid.Column width={16}>
-            <div style={{ display: "flex", alignItems: "center", marginBottom: "20px" }}>
+            <PageHeaderContainer>
               <StyledButton
                 variant="outlined"
                 onClick={() => navigate("/patients")}
@@ -115,10 +142,10 @@ export default function PatientForm({ isEdit = false }) {
               >
                 <Icon name="arrow left" style={{ margin: 0 }} />
               </StyledButton>
-              <Header as="h2" style={{ color: "#e8eaf6", margin: 0 }}>
+              <PageTitle as="h2">
                 {isEdit ? "Edit Patient Record" : "Add New Patient Profile"}
-              </Header>
-            </div>
+              </PageTitle>
+            </PageHeaderContainer>
           </Grid.Column>
         </Grid.Row>
 
@@ -145,9 +172,9 @@ export default function PatientForm({ isEdit = false }) {
                 }}
               >
                 {error && (
-                  <StyledAlert severity="error" style={{ marginBottom: "20px" }}>
+                  <AlertWrapper severity="error">
                     {error}
-                  </StyledAlert>
+                  </AlertWrapper>
                 )}
 
                 <SectionHeader>Personal Details</SectionHeader>
@@ -181,7 +208,7 @@ export default function PatientForm({ isEdit = false }) {
                     </Grid.Column>
                   </Grid.Row>
 
-                  <Grid.Row style={{ paddingTop: 0 }}>
+                  <TightGridRow>
                     <Grid.Column>
                       <Form.Item name="date_of_birth">
                         <StyledTextField
@@ -211,7 +238,7 @@ export default function PatientForm({ isEdit = false }) {
                         </StyledTextField>
                       </Form.Item>
                     </Grid.Column>
-                  </Grid.Row>
+                  </TightGridRow>
                 </Grid>
 
                 <SectionHeader>Contact Details</SectionHeader>
@@ -242,7 +269,7 @@ export default function PatientForm({ isEdit = false }) {
                       </Form.Item>
                     </Grid.Column>
                   </Grid.Row>
-                  <Grid.Row style={{ paddingTop: 0 }}>
+                  <TightGridRow>
                     <Grid.Column width={16}>
                       <Form.Item name="address">
                         <StyledTextField
@@ -253,7 +280,7 @@ export default function PatientForm({ isEdit = false }) {
                         />
                       </Form.Item>
                     </Grid.Column>
-                  </Grid.Row>
+                  </TightGridRow>
                 </Grid>
 
                 <SectionHeader>Medical & Emergency Contact Information</SectionHeader>
@@ -268,7 +295,7 @@ export default function PatientForm({ isEdit = false }) {
                       </Form.Item>
                     </Grid.Column>
                   </Grid.Row>
-                  <Grid.Row style={{ paddingTop: 0 }}>
+                  <TightGridRow>
                     <Grid.Column>
                       <Form.Item name="allergies">
                         <StyledTextField
@@ -289,7 +316,7 @@ export default function PatientForm({ isEdit = false }) {
                         />
                       </Form.Item>
                     </Grid.Column>
-                  </Grid.Row>
+                  </TightGridRow>
                 </Grid>
 
                 {!isEdit && (
@@ -313,7 +340,7 @@ export default function PatientForm({ isEdit = false }) {
                                       <IconButton
                                         onClick={() => setShowPassword(!showPassword)}
                                         edge="end"
-                                        sx={{ color: "#9094a6" }}
+                                        sx={{ color: theme.colors.textSecondary }}
                                       >
                                         <Icon name={showPassword ? "eye" : "eye slash"} style={{ fontSize: "16px", margin: 0 }} />
                                       </IconButton>
@@ -350,7 +377,7 @@ export default function PatientForm({ isEdit = false }) {
                                       <IconButton
                                         onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                                         edge="end"
-                                        sx={{ color: "#9094a6" }}
+                                        sx={{ color: theme.colors.textSecondary }}
                                       >
                                         <Icon name={showConfirmPassword ? "eye" : "eye slash"} style={{ fontSize: "16px", margin: 0 }} />
                                       </IconButton>

@@ -13,7 +13,7 @@ import styled from "styled-components";
 
 const PageContainer = styled.div`
   padding: 16px;
-  background: ${({ theme }) => theme.colors?.background || "#0f1117"};
+  background: ${({ theme }) => theme.colors.background};
   min-height: 100%;
 `;
 
@@ -26,6 +26,10 @@ const Toolbar = styled.div`
   gap: 16px;
 `;
 
+const SearchToolbar = styled(Toolbar)`
+  margin-bottom: 16px;
+`;
+
 const SearchWrapper = styled.div`
   width: 320px;
 `;
@@ -35,18 +39,93 @@ const ActionButtons = styled.div`
   gap: 8px;
 `;
 
+const PageTitle = styled(Header)`
+  && {
+    color: ${({ theme }) => theme.colors.textPrimary} !important;
+    font-weight: 700 !important;
+    margin: 0 !important;
+  }
+`;
+
+const StyledTable = styled(Table)`
+  && {
+    .ant-table {
+      background: ${({ theme }) => theme.colors.backgroundCard} !important;
+      color: ${({ theme }) => theme.colors.textPrimary} !important;
+    }
+    .ant-table-thead > tr > th {
+      background: ${({ theme }) => theme.colors.tableHeader} !important;
+      color: ${({ theme }) => theme.colors.textPrimary} !important;
+      border-bottom: 1px solid ${({ theme }) => theme.colors.border} !important;
+      font-weight: 600;
+    }
+    .ant-table-tbody > tr > td {
+      background: ${({ theme }) => theme.colors.tableRow} !important;
+      color: ${({ theme }) => theme.colors.textSecondary} !important;
+      border-bottom: 1px solid ${({ theme }) => theme.colors.borderLight} !important;
+    }
+    .ant-table-tbody > tr:hover > td {
+      background: ${({ theme }) => theme.colors.tableRowHover} !important;
+    }
+    
+    /* Pagination styling */
+    .ant-pagination-item {
+      background: ${({ theme }) => theme.colors.backgroundCard} !important;
+      border-color: ${({ theme }) => theme.colors.border} !important;
+      a {
+        color: ${({ theme }) => theme.colors.textSecondary} !important;
+      }
+      &-active {
+        border-color: ${({ theme }) => theme.colors.primary} !important;
+        a {
+          color: ${({ theme }) => theme.colors.primary} !important;
+        }
+      }
+    }
+    .ant-pagination-prev, .ant-pagination-next {
+      .ant-pagination-item-link {
+        background: ${({ theme }) => theme.colors.backgroundCard} !important;
+        border-color: ${({ theme }) => theme.colors.border} !important;
+        color: ${({ theme }) => theme.colors.textSecondary} !important;
+      }
+      &:not(.ant-pagination-disabled):hover .ant-pagination-item-link {
+        border-color: ${({ theme }) => theme.colors.primary} !important;
+        color: ${({ theme }) => theme.colors.primary} !important;
+      }
+    }
+  }
+`;
+
 const StatusTag = styled(Tag)`
   && {
     border-radius: 4px;
     font-weight: 500;
     padding: 2px 8px;
+    background-color: ${({ active, theme }) => active ? theme.colors.successLight || 'rgba(56, 161, 105, 0.1)' : theme.colors.dangerLight || 'rgba(229, 62, 62, 0.1)'} !important;
+    color: ${({ active, theme }) => active ? theme.colors.success : theme.colors.danger} !important;
+    border: 1px solid ${({ active, theme }) => active ? theme.colors.success : theme.colors.danger}20 !important;
   }
 `;
 
 const EmptyStateContainer = styled.div`
   padding: 40px;
   text-align: center;
-  color: ${({ theme }) => theme.colors?.textSecondary || "#9094a6"};
+  color: ${({ theme }) => theme.colors.textMuted};
+  
+  .icon {
+    color: ${({ theme }) => theme.colors.textMuted} !important;
+    margin-bottom: 12px;
+  }
+`;
+
+const PatientIdText = styled.strong`
+  color: ${({ theme }) => theme.colors.primary};
+`;
+
+const AlertWrapper = styled(StyledAlert)`
+  && {
+    margin-bottom: 16px;
+  }
 `;
 
 export default function PatientList() {
@@ -87,7 +166,7 @@ export default function PatientList() {
       title: "Patient ID",
       dataIndex: "id",
       key: "id",
-      render: (id) => <strong style={{ color: "#4f8ef7" }}>#{id}</strong>,
+      render: (id) => <PatientIdText>#{id}</PatientIdText>,
     },
     {
       title: "Patient Name",
@@ -128,7 +207,7 @@ export default function PatientList() {
       dataIndex: "is_active",
       key: "is_active",
       render: (isActive) => (
-        <StatusTag color={isActive ? "green" : "red"}>
+        <StatusTag active={isActive}>
           {isActive ? "Active" : "Inactive"}
         </StatusTag>
       ),
@@ -171,9 +250,9 @@ export default function PatientList() {
         <Grid.Row>
           <Grid.Column width={16}>
             <Toolbar>
-              <Header as="h2" style={{ color: "#e8eaf6", margin: 0 }}>
+              <PageTitle as="h2">
                 Patient Management
-              </Header>
+              </PageTitle>
               <StyledButton
                 variant="contained"
                 onClick={() => navigate("/patients/new")}
@@ -187,7 +266,7 @@ export default function PatientList() {
         <Grid.Row>
           <Grid.Column width={16}>
             <StyledCard>
-              <Toolbar style={{ marginBottom: "16px" }}>
+              <SearchToolbar>
                 <SearchWrapper>
                   <StyledTextField
                     label="Search Patient"
@@ -196,15 +275,15 @@ export default function PatientList() {
                     onChange={(e) => searchPatients(e.target.value)}
                   />
                 </SearchWrapper>
-              </Toolbar>
+              </SearchToolbar>
 
               {error && (
-                <StyledAlert severity="error" style={{ marginBottom: "16px" }}>
+                <AlertWrapper severity="error">
                   {error}
-                </StyledAlert>
+                </AlertWrapper>
               )}
 
-              <Table
+              <StyledTable
                 columns={columns}
                 dataSource={patients}
                 rowKey="id"
@@ -213,7 +292,7 @@ export default function PatientList() {
                 locale={{
                   emptyText: (
                     <EmptyStateContainer>
-                      <Icon name="user outline" size="huge" style={{ marginBottom: "12px" }} />
+                      <Icon name="user outline" size="huge" className="icon" />
                       <p>No patients found. Click 'Add New Patient' to get started.</p>
                     </EmptyStateContainer>
                   ),

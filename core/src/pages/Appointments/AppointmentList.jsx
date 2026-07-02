@@ -11,11 +11,11 @@ import {
   StyledCard,
   StyledAlert,
 } from "../../components/common";
-import styled from "styled-components";
+import styled, { useTheme } from "styled-components";
 
 const PageContainer = styled.div`
   padding: 16px;
-  background: ${({ theme }) => theme.colors?.background || "#0f1117"};
+  background: ${({ theme }) => theme.colors.background};
   min-height: 100%;
 `;
 
@@ -26,6 +26,10 @@ const Toolbar = styled.div`
   margin-bottom: 20px;
   flex-wrap: wrap;
   gap: 16px;
+`;
+
+const SearchToolbar = styled(Toolbar)`
+  margin-bottom: 16px;
 `;
 
 const FilterWrapper = styled.div`
@@ -40,16 +44,157 @@ const ActionButtons = styled.div`
   gap: 8px;
 `;
 
-const StatusTag = styled(Tag)`
+const PageTitle = styled(Header)`
+  && {
+    color: ${({ theme }) => theme.colors.textPrimary} !important;
+    font-weight: 700 !important;
+    margin: 0 !important;
+  }
+`;
+
+const StyledTable = styled(Table)`
+  && {
+    .ant-table {
+      background: ${({ theme }) => theme.colors.backgroundCard} !important;
+      color: ${({ theme }) => theme.colors.textPrimary} !important;
+    }
+    .ant-table-thead > tr > th {
+      background: ${({ theme }) => theme.colors.tableHeader} !important;
+      color: ${({ theme }) => theme.colors.textPrimary} !important;
+      border-bottom: 1px solid ${({ theme }) => theme.colors.border} !important;
+      font-weight: 600;
+    }
+    .ant-table-tbody > tr > td {
+      background: ${({ theme }) => theme.colors.tableRow} !important;
+      color: ${({ theme }) => theme.colors.textSecondary} !important;
+      border-bottom: 1px solid ${({ theme }) => theme.colors.borderLight} !important;
+    }
+    .ant-table-tbody > tr:hover > td {
+      background: ${({ theme }) => theme.colors.tableRowHover} !important;
+    }
+    
+    /* Pagination styling */
+    .ant-pagination-item {
+      background: ${({ theme }) => theme.colors.backgroundCard} !important;
+      border-color: ${({ theme }) => theme.colors.border} !important;
+      a {
+        color: ${({ theme }) => theme.colors.textSecondary} !important;
+      }
+      &-active {
+        border-color: ${({ theme }) => theme.colors.primary} !important;
+        a {
+          color: ${({ theme }) => theme.colors.primary} !important;
+        }
+      }
+    }
+    .ant-pagination-prev, .ant-pagination-next {
+      .ant-pagination-item-link {
+        background: ${({ theme }) => theme.colors.backgroundCard} !important;
+        border-color: ${({ theme }) => theme.colors.border} !important;
+        color: ${({ theme }) => theme.colors.textSecondary} !important;
+      }
+      &:not(.ant-pagination-disabled):hover .ant-pagination-item-link {
+        border-color: ${({ theme }) => theme.colors.primary} !important;
+        color: ${({ theme }) => theme.colors.primary} !important;
+      }
+    }
+  }
+`;
+
+const ThemedStatusTag = styled(Tag)`
   && {
     border-radius: 4px;
     font-weight: 500;
     padding: 2px 8px;
+    background-color: ${({ status, theme }) => {
+      switch (String(status).toLowerCase()) {
+        case "scheduled": return theme.colors.infoLight || 'rgba(49, 130, 206, 0.1)';
+        case "confirmed": return theme.colors.successLight || 'rgba(56, 161, 105, 0.1)';
+        case "completed": return theme.colors.primaryLight || 'rgba(124, 92, 191, 0.1)';
+        case "cancelled": return theme.colors.dangerLight || 'rgba(229, 62, 62, 0.1)';
+        default: return theme.colors.badgeBackground || 'rgba(0, 0, 0, 0.05)';
+      }
+    }} !important;
+    color: ${({ status, theme }) => {
+      switch (String(status).toLowerCase()) {
+        case "scheduled": return theme.colors.info;
+        case "confirmed": return theme.colors.success;
+        case "completed": return theme.colors.primary;
+        case "cancelled": return theme.colors.danger;
+        default: return theme.colors.textSecondary;
+      }
+    }} !important;
+    border: 1px solid ${({ status, theme }) => {
+      switch (String(status).toLowerCase()) {
+        case "scheduled": return theme.colors.info;
+        case "confirmed": return theme.colors.success;
+        case "completed": return theme.colors.primary;
+        case "cancelled": return theme.colors.danger;
+        default: return theme.colors.border;
+      }
+    }}20 !important;
+  }
+`;
+
+const StyledSelect = styled(Select)`
+  && {
+    width: 160px;
+    height: 40px;
+    
+    .ant-select-selector {
+      background-color: ${({ theme }) => theme.colors.inputBackground} !important;
+      border-color: ${({ theme }) => theme.colors.inputBorder} !important;
+      color: ${({ theme }) => theme.colors.textPrimary} !important;
+      height: 40px !important;
+      padding: 4px 11px !important;
+      border-radius: 8px !important;
+      
+      &:hover, &:focus {
+        border-color: ${({ theme }) => theme.colors.primary} !important;
+      }
+    }
+    
+    &.ant-select-focused .ant-select-selector {
+      border-color: ${({ theme }) => theme.colors.primary} !important;
+      box-shadow: 0 0 0 2px ${({ theme }) => theme.colors.primary}20 !important;
+    }
+    
+    .ant-select-arrow {
+      color: ${({ theme }) => theme.colors.textSecondary} !important;
+    }
+    
+    .ant-select-selection-item {
+      color: ${({ theme }) => theme.colors.textPrimary} !important;
+      font-weight: 500;
+      line-height: 30px !important;
+    }
+  }
+`;
+
+const AppointmentIdText = styled.strong`
+  color: ${({ theme }) => theme.colors.primary};
+`;
+
+const AlertWrapper = styled(StyledAlert)`
+  && {
+    margin-bottom: 16px;
+  }
+`;
+
+const EmptyStateContainer = styled.div`
+  padding: 40px;
+  text-align: center;
+  color: ${({ theme }) => theme.colors.textMuted};
+  
+  .icon {
+    color: ${({ theme }) => theme.colors.textMuted} !important;
+    margin-bottom: 12px;
   }
 `;
 
 export default function AppointmentList() {
   const navigate = useNavigate();
+  const theme = useTheme();
   const {
     appointments,
     loading,
@@ -131,21 +276,6 @@ export default function AppointmentList() {
     });
   };
 
-  const getStatusColor = (status) => {
-    switch (String(status).toLowerCase()) {
-      case "scheduled":
-        return "blue";
-      case "confirmed":
-        return "green";
-      case "completed":
-        return "purple";
-      case "cancelled":
-        return "red";
-      default:
-        return "default";
-    }
-  };
-
   // Filter list
   const filteredAppointments = appointments.filter((appt) => {
     if (!appt) return false;
@@ -183,7 +313,7 @@ export default function AppointmentList() {
       title: "Appointment ID",
       dataIndex: "id",
       key: "id",
-      render: (id) => <strong style={{ color: "#4f8ef7" }}>APT-{String(id).padStart(4, "0")}</strong>,
+      render: (id) => <AppointmentIdText>APT-{String(id).padStart(4, "0")}</AppointmentIdText>,
     },
     {
       title: "Patient",
@@ -219,9 +349,9 @@ export default function AppointmentList() {
       dataIndex: "status",
       key: "status",
       render: (status) => (
-        <StatusTag color={getStatusColor(status)}>
+        <ThemedStatusTag status={status}>
           {status}
-        </StatusTag>
+        </ThemedStatusTag>
       ),
     },
     {
@@ -274,9 +404,9 @@ export default function AppointmentList() {
         <Grid.Row>
           <Grid.Column width={16}>
             <Toolbar>
-              <Header as="h2" style={{ color: "#e8eaf6", margin: 0 }}>
+              <PageTitle as="h2">
                 Appointments & Scheduling
-              </Header>
+              </PageTitle>
               <StyledButton
                 variant="contained"
                 onClick={() => navigate("/appointments/new")}
@@ -290,7 +420,7 @@ export default function AppointmentList() {
         <Grid.Row>
           <Grid.Column width={16}>
             <StyledCard>
-              <Toolbar style={{ marginBottom: "16px" }}>
+              <SearchToolbar>
                 <FilterWrapper>
                   <StyledTextField
                     label="Search Patient/Doctor"
@@ -300,28 +430,30 @@ export default function AppointmentList() {
                     sx={{ width: 240 }}
                   />
                   
-                  <Select
+                  <StyledSelect
                     value={statusFilter}
                     onChange={setStatusFilter}
-                    style={{ width: 160, height: 40 }}
-                    styles={{ popup: { root: { background: "#141622", color: "#ffffff" } } }}
+                    dropdownStyle={{
+                      backgroundColor: theme.colors.backgroundCard,
+                      border: `1px solid ${theme.colors.border}`,
+                    }}
                   >
                     <Select.Option value="all">All Statuses</Select.Option>
                     <Select.Option value="scheduled">Scheduled</Select.Option>
                     <Select.Option value="confirmed">Confirmed</Select.Option>
                     <Select.Option value="completed">Completed</Select.Option>
                     <Select.Option value="cancelled">Cancelled</Select.Option>
-                  </Select>
+                  </StyledSelect>
                 </FilterWrapper>
-              </Toolbar>
+              </SearchToolbar>
 
               {error && (
-                <StyledAlert severity="error" style={{ marginBottom: "16px" }}>
+                <AlertWrapper severity="error">
                   {error}
-                </StyledAlert>
+                </AlertWrapper>
               )}
 
-              <Table
+              <StyledTable
                 columns={columns}
                 dataSource={filteredAppointments}
                 rowKey="id"
@@ -329,8 +461,8 @@ export default function AppointmentList() {
                 pagination={{ pageSize: 8 }}
                 locale={{
                   emptyText: (
-                    <EmptyStateContainer style={{ padding: "40px", textAlign: "center", color: "#9094a6" }}>
-                      <Icon name="calendar alternate outline" size="huge" style={{ marginBottom: "12px" }} />
+                    <EmptyStateContainer>
+                      <Icon name="calendar alternate outline" size="huge" className="icon" />
                       <p>No appointments booked. Click 'Create Appointment' to schedule one.</p>
                     </EmptyStateContainer>
                   ),
@@ -355,6 +487,3 @@ export default function AppointmentList() {
     </PageContainer>
   );
 }
-
-// Styling helper
-const EmptyStateContainer = styled.div``;

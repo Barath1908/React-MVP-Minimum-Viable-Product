@@ -5,12 +5,12 @@ import { StyledCard } from "../../components/common";
 
 const HistoryWrapper = styled.div`
   margin-top: 16px;
-  color: ${({ theme }) => theme.colors?.textPrimary || "#ffffff"};
+  color: ${({ theme }) => theme.colors.textPrimary};
 `;
 
 const InfoBox = styled.div`
-  background: ${({ theme }) => theme.colors?.inputBackground || "#1e2230"};
-  border: 1px solid ${({ theme }) => theme.colors?.border || "#2a2d3e"};
+  background: ${({ theme }) => theme.colors.inputBackground};
+  border: 1px solid ${({ theme }) => theme.colors.border};
   border-radius: 8px;
   padding: 16px;
   margin-bottom: 16px;
@@ -20,7 +20,7 @@ const Label = styled.div`
   font-size: 11px;
   font-weight: 600;
   text-transform: uppercase;
-  color: ${({ theme }) => theme.colors?.textSecondary || "#9094a6"};
+  color: ${({ theme }) => theme.colors.textSecondary};
   margin-bottom: 4px;
   letter-spacing: 0.05em;
 `;
@@ -31,10 +31,40 @@ const Value = styled.div`
   line-height: 1.5;
 `;
 
+const AllergyValue = styled(Value)`
+  color: ${({ hasAllergies, theme }) => hasAllergies ? theme.colors.danger : 'inherit'} !important;
+`;
+
 const NoteItem = styled.div`
-  border-left: 3px solid #4f8ef7;
+  border-left: 3px solid ${({ theme }) => theme.colors.primary};
   padding-left: 12px;
   margin-bottom: 12px;
+`;
+
+const SectionHeader = styled(Header)`
+  && {
+    color: ${({ theme }) => theme.colors.primary} !important;
+    font-weight: 600 !important;
+  }
+`;
+
+const NoteHeaderRow = styled.div`
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 4px;
+`;
+
+const NoteTitle = styled.strong`
+  color: ${({ theme }) => theme.colors.primary};
+`;
+
+const NoteDate = styled.span`
+  color: ${({ theme }) => theme.colors.textMuted};
+  font-size: 12px;
+`;
+
+const NoteBody = styled(Value)`
+  color: ${({ theme }) => theme.colors.textSecondary} !important;
 `;
 
 export default function MedicalHistory({ patient }) {
@@ -45,14 +75,14 @@ export default function MedicalHistory({ patient }) {
       <Grid stackable>
         <Grid.Row columns={2}>
           <Grid.Column>
-            <Header as="h3" style={{ color: "#e8eaf6" }}>
+            <SectionHeader as="h3">
               <Icon name="pills" /> Allergies & Medications
-            </Header>
+            </SectionHeader>
             <InfoBox>
               <Label>Known Allergies</Label>
-              <Value style={{ color: patient.allergies ? "#ff5252" : "inherit" }}>
+              <AllergyValue hasAllergies={!!patient.allergies}>
                 {patient.allergies || "No known drug/food allergies reported."}
-              </Value>
+              </AllergyValue>
             </InfoBox>
             <InfoBox>
               <Label>Current Medications</Label>
@@ -63,9 +93,9 @@ export default function MedicalHistory({ patient }) {
           </Grid.Column>
 
           <Grid.Column>
-            <Header as="h3" style={{ color: "#e8eaf6" }}>
+            <SectionHeader as="h3">
               <Icon name="history" /> Medical History & Diagnoses
-            </Header>
+            </SectionHeader>
             <InfoBox>
               <Label>Significant Medical Conditions</Label>
               <Value>
@@ -83,29 +113,29 @@ export default function MedicalHistory({ patient }) {
 
         <Grid.Row>
           <Grid.Column width={16}>
-            <Header as="h3" style={{ color: "#e8eaf6" }}>
+            <SectionHeader as="h3">
               <Icon name="file alternate outline" /> Clinical Encounters & Doctor Notes
-            </Header>
+            </SectionHeader>
             <StyledCard>
               <NoteItem>
-                <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "4px" }}>
-                  <strong style={{ color: "#4f8ef7" }}>Initial Patient Intake Consultation</strong>
-                  <span style={{ color: "#9094a6", fontSize: "12px" }}>
+                <NoteHeaderRow>
+                  <NoteTitle>Initial Patient Intake Consultation</NoteTitle>
+                  <NoteDate>
                     {patient.created_at ? new Date(patient.created_at).toLocaleDateString() : "Recent"}
-                  </span>
-                </div>
-                <Value style={{ color: "#d0d4e6" }}>
+                  </NoteDate>
+                </NoteHeaderRow>
+                <NoteBody>
                   Patient registered context securely under workspace subdomain. Clinical records encrypted.
                   No secondary complications reported.
-                </Value>
+                </NoteBody>
               </NoteItem>
               
               {patient.doctor_notes && (
                 <NoteItem>
-                  <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "4px" }}>
-                    <strong style={{ color: "#4f8ef7" }}>Physician Follow-up</strong>
-                  </div>
-                  <Value style={{ color: "#d0d4e6" }}>{patient.doctor_notes}</Value>
+                  <NoteHeaderRow>
+                    <NoteTitle>Physician Follow-up</NoteTitle>
+                  </NoteHeaderRow>
+                  <NoteBody>{patient.doctor_notes}</NoteBody>
                 </NoteItem>
               )}
             </StyledCard>
